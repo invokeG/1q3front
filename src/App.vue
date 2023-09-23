@@ -82,7 +82,8 @@
       </el-header>
 
       <el-main>
-        <h3>{{  }}</h3>
+        <!-- <h3>{{  }}</h3> -->
+        <threedemo></threedemo>
       </el-main>
     </el-container>
   </el-container>
@@ -92,6 +93,7 @@
 import { onMounted } from 'vue'
 import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
 import axios from 'axios';
+import threedemo from "./components/threedemo.vue"
 
 interface Env {
   all_obstacles:number[][]

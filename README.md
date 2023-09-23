@@ -1,4 +1,4 @@
-# Vite + Vue3 + TS
+# Vite + Vue3 + TS + Tress.js
 
 ## Dependent packages
 
@@ -9,6 +9,8 @@
 >typescript: "5.0.2"
 
 >element-plus: "2.3.14"
+
+>three: "0.156.1"
 
 ## Install all packages:
 ```npm install```
