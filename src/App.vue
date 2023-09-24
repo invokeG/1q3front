@@ -1,6 +1,11 @@
 <template>
   <div>
-  <elementui></elementui>
+  <!-- <elementui></elementui> -->
+  <button @click="topage('/')">threejs</button>
+  <button @click="topage('/getenv')">GetEnv</button>
+  <!-- <RouterLink to="/">threejs</RouterLink>
+  <RouterLink to="/getenv">GetEnv</RouterLink> -->
+  <RouterView></RouterView>
   </div>
   <!-- <div style="float: right">
   <threedemo></threedemo>
@@ -8,8 +13,13 @@
 </template>
 
 <script lang="ts" setup>
-import elementui from "./components/Elementui.vue"
+import { useRouter } from 'vue-router';
+// import elementui from "./components/Elementui.vue"
 // import threedemo from "./components/Threedemo.vue"
+const router = useRouter()
+const topage = (url:string)=>{
+  router.push(url)
+}
 
 </script>
 

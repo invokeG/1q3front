@@ -82,8 +82,10 @@
             </el-header>
             <el-main>
                 <div>
-                    <Threedemo></Threedemo>
+                    <Threedemo class="three"></Threedemo>
                 </div>
+                <h2>Test</h2>
+                <h1>.txt</h1>
             </el-main>
         </el-container>
     </el-container>
@@ -91,25 +93,7 @@
 
 <script setup lang="ts">
 import Threedemo from "./Threedemo.vue"
-// import { onMounted } from 'vue'
-// import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
-// import axios from 'axios';
 
-// interface Env {
-//     all_obstacles: number[][]
-//     start_pos: number[]
-//     targets: number[][]
-// }
-
-// let group3_env: Env
-
-// onMounted(() => {
-//     axios.get("http://localhost:8080/home/group3/getEnv")
-//         .then(function (response) {
-//             group3_env = response.data
-//             console.log(group3_env.all_obstacles)
-//         })
-// })
 </script>
 
 <style scoped>
@@ -130,6 +114,9 @@ import Threedemo from "./Threedemo.vue"
 
 .layout-container-demo .el-main {
     padding: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start
 }
 
 .layout-container-demo .toolbar {
@@ -139,5 +126,9 @@ import Threedemo from "./Threedemo.vue"
     height: 100%;
     right: 20px;
 }
+
+/* .three {
+    float: left;
+} */
 
 </style>
