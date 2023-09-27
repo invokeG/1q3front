@@ -84,8 +84,7 @@
                 <div>
                     <Threedemo class="three"></Threedemo>
                 </div>
-                <h2>Test</h2>
-                <h1>.txt</h1>
+                <h1></h1>
             </el-main>
         </el-container>
     </el-container>
