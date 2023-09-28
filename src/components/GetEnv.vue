@@ -15,6 +15,7 @@ interface Env {
   targets:number[][]
 }
 
+//将group3_env改为响应式，否则由于异步操作导致参数无法再次渲染
 let group3_env = ref<Env>()
 let isRequestDone = false
 
