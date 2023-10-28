@@ -20,7 +20,7 @@ let group3_env = ref<Env>()
 let isRequestDone = false
 
 onMounted(async () => {
-  await axios.get("http://localhost:8080/home/group3/getEnv")
+  await axios.get("http://192.168.31.216:8081/home/group3/getEnv")
     .then(function (response) {
       group3_env.value = response.data
     isRequestDone = true
@@ -29,7 +29,7 @@ onMounted(async () => {
 
 setTimeout(() => { 
     if(isRequestDone){
-        console.log(group3_env)
+        console.log(group3_env.value.targets)
     }else{
         console.log("请稍等，数据还在加载中…")
     }
