@@ -10,7 +10,7 @@
 
 >element-plus: "2.3.14"
 
->three: "0.156.1"
+>three: "0.156.1" & Tween
 
 ## Install all packages:
 ```npm install```
