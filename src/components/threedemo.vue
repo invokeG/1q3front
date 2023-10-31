@@ -17,6 +17,7 @@ let isEvnDone = false
 let isStepDone = false
 let model_drone
 let model
+let posOfUAV
 
 //创建场景
 const scene = new THREE.Scene()
@@ -32,7 +33,8 @@ onMounted(() => {
     renderer.setSize(widthofelement, heightofelement)
     document.getElementById("three").appendChild(renderer.domElement)
     console.log(document.getElementById("three").clientWidth + "////" + document.getElementById("three").clientHeight)
-    axios.get("http://192.168.31.216:8081/home/group3/getEnv")
+    // axios.get("http://192.168.31.216:8081/home/group3/getEnv")
+    axios.get("http://192.168.0.103:8080/home/group3/getEnv")
         .then(function (response) {
             group3_env = response.data
             isEvnDone = true
@@ -40,7 +42,8 @@ onMounted(() => {
         .catch(function (error) {
             console.log(error);
         });
-    axios.get("http://192.168.31.216:8081/home/group3/getAllSteps")
+    // axios.get("http://192.168.31.216:8081/home/group3/getAllSteps")
+    axios.get("http://192.168.0.103:8080/home/group3/getAllSteps")
         .then(function (response) {
             group3_steps = response.data
             isStepDone = true
@@ -94,6 +97,35 @@ scene.add(gridHelper)
 const gltfLoader = new GLTFLoader()
 
 //加载UAV
+const droneGroup = new THREE.Group()
+// gltfLoader.load(
+//     //模型路径
+//     "./models/UAV/low-poly_uav.glb",
+//     (gltf: { scene: any }) => {
+//         console.log(gltf)
+//         model_drone = gltf.scene
+//         model_drone.scale.set(0.5, 0.5, 0.5)
+        
+
+//         //创建投影面
+//         const circleGeometry = new THREE.CircleGeometry(0.1, 32);
+//         const circleMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide });
+//         posOfUAV = new THREE.Mesh(circleGeometry, circleMaterial);
+        
+//         // 检查是否请求完成并更新模型位置
+//         if (isStepDone && isEvnDone && model_drone) {
+//             model_drone.position.set(group3_env.start_pos[0], 0, group3_env.start_pos[1])
+//             scene.add(model_drone)
+
+//             posOfUAV.position.copy(model_drone.position);
+//             posOfUAV.position.y = 0;
+//             posOfUAV.rotation.x = -Math.PI / 2;
+//             scene.add(posOfUAV)
+//             moveModel()
+//         }
+//     }
+// )
+
 gltfLoader.load(
     //模型路径
     "./models/UAV/low-poly_uav.glb",
@@ -101,10 +133,29 @@ gltfLoader.load(
         console.log(gltf)
         model_drone = gltf.scene
         model_drone.scale.set(0.5, 0.5, 0.5)
-        scene.add(model_drone)
+        
+
+        //创建投影面
+        const circleGeometry = new THREE.CircleGeometry(0.1, 32);
+        const circleMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+        posOfUAV = new THREE.Mesh(circleGeometry, circleMaterial);
+        
         // 检查是否请求完成并更新模型位置
         if (isStepDone && isEvnDone && model_drone) {
-            model_drone.position.set(group3_env.start_pos[0], 0, group3_env.start_pos[1])
+            // model_drone.position.set(group3_env.start_pos[0], 5, group3_env.start_pos[1])
+            // scene.add(model_drone)
+
+            posOfUAV.position.copy(model_drone.position);
+            posOfUAV.position.y = 0;
+            posOfUAV.rotation.x = -Math.PI / 2;
+            // scene.add(posOfUAV)
+
+            droneGroup.add(model_drone)
+            droneGroup.add(posOfUAV)
+            droneGroup.position.set(group3_env.start_pos[0], 0, group3_env.start_pos[1])
+            scene.add(droneGroup)
+
+
             moveModel()
         }
     }
@@ -112,110 +163,6 @@ gltfLoader.load(
 
 
 
-// //加载car
-// gltfLoader.load(
-//     //模型路径
-//     "./models/Car/low_poly_tank.glb",
-//     (gltf) => {
-//         console.log(gltf)
-//         model_car = gltf.scene
-//         model_car.scale.set(0.0005, 0.0005, 0.0005)
-//         model_car.position.set(25, 0, 25)
-//         model_car.traverse(function (child) {
-//             if (child.isMesh) {
-//                 child.frustumCulled = false;
-//                 //模型阴影
-//                 child.castShadow = true;
-//                 //模型自发光
-//                 child.material.emissive = child.material.color;
-//                 child.material.emissiveMap = child.material.map;
-//             }
-//         }) 
-//         scene.add(model_car)
-//     }
-// )
-
-// //加载ship
-// gltfLoader.load(
-//     //模型路径
-//     "./models/Ship/ship.glb",
-//     (gltf) => {
-//         console.log(gltf)
-//         model_ship = gltf.scene
-//         model_ship.scale.set(0.05, 0.05, 0.05)
-//         model_ship.position.set(25, 0.1, 24)
-//         model_ship.traverse(function (child) {
-//             if (child.isMesh) {
-//                 child.frustumCulled = false;
-//                 //模型阴影
-//                 child.castShadow = true;
-//                 //模型自发光
-//                 child.material.emissive = child.material.color;
-//                 child.material.emissiveMap = child.material.map;
-//             }
-//         })
-//         scene.add(model_ship)
-//     }
-// )
-
-// //加载people
-// gltfLoader.load(
-//     //模型路径
-//     "./models/People/three_soldier.glb",
-//     (gltf) => {
-//         console.log(gltf)
-//         model_people = gltf.scene
-//         model_people.scale.set(0.001, 0.001, 0.001)
-//         model_people.position.set(25, 0, 26)
-//         model_people.lookAt(0, 0, 0)
-//         model_people.traverse(function (child) {
-//             if (child.isMesh) {
-//                 child.frustumCulled = false;
-//                 //模型阴影
-//                 child.castShadow = true;
-//                 //模型自发光
-//                 child.material.emissive = child.material.color;
-//                 child.material.emissiveMap = child.material.map;
-//             }
-//         })
-//         scene.add(model_people)
-//     }
-// )
-
-// //放置车船人
-// async function loadModels() {
-//     if (!isEvnDone) {
-//         // 如果请求尚未完成，则等待0.5秒
-//         await new Promise((resolve) => setTimeout(resolve, 500));
-//         await loadModels(); // 递归调用，直到isRequestDone为true
-//     } else {
-//         const allObstacles = group3_env.all_obstacles;
-
-//         allObstacles.forEach((obstacle: any[]) => {
-//             const x = obstacle[0];
-//             const y = obstacle[1];
-//             const type = obstacle[2];
-
-//             let model
-
-//             if (type === 0) {
-//                 model = model_car.clone();
-//                 model.position.set(x, 0, y);
-//                 scene.add(model);
-//             } else if (type === 1) {
-//                 model = model_ship.clone();
-//                 model.position.set(x, 0.1, y);
-//                 scene.add(model);
-//             } else if (type === 2) {
-//                 model = model_people.clone();
-//                 model.position.set(x, 0, y);
-//                 scene.add(model);
-//             }
-//         });
-//     }
-// }
-
-// loadModels();
 
 //模型加载
 function loadModel(modelPath: any, scale: any, position: any) {
@@ -243,7 +190,7 @@ function loadModel(modelPath: any, scale: any, position: any) {
 }
 
 
-//放置车船人
+//放置车船人 & 目标
 async function loadAllModels() {
     if (!isEvnDone) {
         // 如果请求尚未完成，则等待0.5秒
@@ -251,6 +198,7 @@ async function loadAllModels() {
         await loadAllModels(); // 递归调用，直到isRequestDone为true
     } else {
         const allObstacles = group3_env.all_obstacles;
+        const targets = group3_env.targets;
 
         allObstacles.forEach((obstacle: any[]) => {
             const x = obstacle[0];
@@ -271,6 +219,16 @@ async function loadAllModels() {
                 loadModel("./models/People/three_soldier.glb", scale, position)
             }
         });
+
+        targets.forEach((target: any[]) => {
+            const x = target[0];
+            const y = target[1];
+
+            let scale = [0.05, 0.05, 0.05]
+            let position = [x, 0, y]
+            loadModel("./models/Target/balloon_target.glb", scale, position)
+
+        });
     }
 }
 
@@ -279,6 +237,7 @@ loadAllModels();
 
 
 // UAV移动模型函数Tween
+
 function moveModel() {
     console.log("开始移动模型")
     if (group3_steps) {
@@ -289,23 +248,28 @@ function moveModel() {
             const coordinates = group3_steps.all_steps[i]
             const x = coordinates[0]
             const y = coordinates[1]
-            const z = 5
+            const z = 0
 
             const targetPosition = new THREE.Vector3(x, z, y)
-            let distance = model_drone.position.distanceTo(targetPosition)
+            let distance = droneGroup.position.distanceTo(targetPosition)
 
-            const tween = new TWEEN.Tween(model_drone.position)
-                .to(targetPosition, distance * 18)
+            const tween = new TWEEN.Tween(droneGroup.position)
+                .to(targetPosition, distance * 10)
                 .easing(TWEEN.Easing.Quadratic.InOut)
                 .onStart(() => {
-                    model_drone.lookAt(targetPosition);
+                    droneGroup.lookAt(targetPosition);
+                    model_drone.position.y = 5;
                     // controls.target = targetPosition
+                    // posOfUAV.position.copy(targetPosition)
+                    // posOfUAV.position.y = 0
+
                 })
                 .onUpdate(() => {
+                    // posOfUAV.position.copy(targetPosition)
 
                 })
                 .onComplete(() => {
-                    
+
                 })
 
 
@@ -319,6 +283,50 @@ function moveModel() {
         }
     }
 }
+// function moveModel() {
+//     console.log("开始移动模型")
+//     if (group3_steps) {
+//         // const tweenTime = 100;
+//         let previousTween = null
+
+//         for (let i = 0; i < group3_steps.all_steps.length; i++) {
+//             const coordinates = group3_steps.all_steps[i]
+//             const x = coordinates[0]
+//             const y = coordinates[1]
+//             const z = 5
+
+//             const targetPosition = new THREE.Vector3(x, z, y)
+//             let distance = model_drone.position.distanceTo(targetPosition)
+
+//             const tween = new TWEEN.Tween(model_drone.position)
+//                 .to(targetPosition, distance * 18)
+//                 .easing(TWEEN.Easing.Quadratic.InOut)
+//                 .onStart(() => {
+//                     model_drone.lookAt(targetPosition);
+//                     // controls.target = targetPosition
+//                     // posOfUAV.position.copy(targetPosition)
+//                     // posOfUAV.position.y = 0
+
+//                 })
+//                 .onUpdate(() => {
+//                     // posOfUAV.position.copy(targetPosition)
+
+//                 })
+//                 .onComplete(() => {
+
+//                 })
+
+
+//             if (previousTween) {
+//                 // tween.delay(distance * 50);
+//                 previousTween.chain(tween);
+//             } else {
+//                 tween.start()
+//             }
+//             previousTween = tween
+//         }
+//     }
+// }
 
 
 
@@ -375,10 +383,10 @@ watch(() => group3_env, () => { console.log(group3_env) }) // 这里可以打印
 
 //渲染函数
 function animate() {
-    if(model_drone){
-        controls.target = model_drone.position
+    if (model_drone) {
+        controls.target = droneGroup.position
     }
-    
+
     controls.update()
     //调用animate
     requestAnimationFrame(animate) //异步函数
