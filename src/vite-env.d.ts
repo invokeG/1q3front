@@ -5,4 +5,5 @@ declare module '*.vue' {
     export default componentOptions
 }
 
-declare module 'three'
+// declare module 'three'
+
