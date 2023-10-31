@@ -98,33 +98,6 @@ const gltfLoader = new GLTFLoader()
 
 //加载UAV
 const droneGroup = new THREE.Group()
-// gltfLoader.load(
-//     //模型路径
-//     "./models/UAV/low-poly_uav.glb",
-//     (gltf: { scene: any }) => {
-//         console.log(gltf)
-//         model_drone = gltf.scene
-//         model_drone.scale.set(0.5, 0.5, 0.5)
-        
-
-//         //创建投影面
-//         const circleGeometry = new THREE.CircleGeometry(0.1, 32);
-//         const circleMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide });
-//         posOfUAV = new THREE.Mesh(circleGeometry, circleMaterial);
-        
-//         // 检查是否请求完成并更新模型位置
-//         if (isStepDone && isEvnDone && model_drone) {
-//             model_drone.position.set(group3_env.start_pos[0], 0, group3_env.start_pos[1])
-//             scene.add(model_drone)
-
-//             posOfUAV.position.copy(model_drone.position);
-//             posOfUAV.position.y = 0;
-//             posOfUAV.rotation.x = -Math.PI / 2;
-//             scene.add(posOfUAV)
-//             moveModel()
-//         }
-//     }
-// )
 
 gltfLoader.load(
     //模型路径
@@ -283,50 +256,6 @@ function moveModel() {
         }
     }
 }
-// function moveModel() {
-//     console.log("开始移动模型")
-//     if (group3_steps) {
-//         // const tweenTime = 100;
-//         let previousTween = null
-
-//         for (let i = 0; i < group3_steps.all_steps.length; i++) {
-//             const coordinates = group3_steps.all_steps[i]
-//             const x = coordinates[0]
-//             const y = coordinates[1]
-//             const z = 5
-
-//             const targetPosition = new THREE.Vector3(x, z, y)
-//             let distance = model_drone.position.distanceTo(targetPosition)
-
-//             const tween = new TWEEN.Tween(model_drone.position)
-//                 .to(targetPosition, distance * 18)
-//                 .easing(TWEEN.Easing.Quadratic.InOut)
-//                 .onStart(() => {
-//                     model_drone.lookAt(targetPosition);
-//                     // controls.target = targetPosition
-//                     // posOfUAV.position.copy(targetPosition)
-//                     // posOfUAV.position.y = 0
-
-//                 })
-//                 .onUpdate(() => {
-//                     // posOfUAV.position.copy(targetPosition)
-
-//                 })
-//                 .onComplete(() => {
-
-//                 })
-
-
-//             if (previousTween) {
-//                 // tween.delay(distance * 50);
-//                 previousTween.chain(tween);
-//             } else {
-//                 tween.start()
-//             }
-//             previousTween = tween
-//         }
-//     }
-// }
 
 
 
