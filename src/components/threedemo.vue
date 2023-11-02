@@ -27,8 +27,8 @@ let isEvnDone: boolean = false;
 let isStepDone: boolean = false;
 let model_drone: THREE.Scene;
 let model: THREE.Scene;
-let posOfUAV: THREE.Scene;
-let sightOfUAV: THREE.Scene;
+let posOfUAV: THREE.Mesh;
+let sightOfUAV: THREE.Mesh;
 
 //创建场景
 const scene: THREE.Scene = new THREE.Scene();
@@ -124,7 +124,7 @@ gltfLoader.load(
         posOfUAV = new THREE.Mesh(circleGeometry, circleMaterial);
 
         //添加一个矩形表示UAV可见区域
-        const planeGeometry: THREE.CircleGeometry = new THREE.PlaneGeometry(7, 7);
+        const planeGeometry: THREE.PlaneGeometry = new THREE.PlaneGeometry(7, 7);
         const planeMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xccffff, side: THREE.DoubleSide });
         sightOfUAV = new THREE.Mesh(planeGeometry, planeMaterial);
 
@@ -163,8 +163,8 @@ function loadModel(modelPath: string, scale: number[], position: number[]) {
             model = gltf.scene;
             model.scale.set(scale[0], scale[1], scale[2]);
             model.position.set(position[0], position[1], position[2]);
-            model.traverse(function (child: { isMesh: any; frustumCulled: boolean; castShadow: boolean; material: { emissive: any; color: any; emissiveMap: any; map: any } }) {
-                if (child.isMesh) {
+            model.traverse((child) => {
+                if (child instanceof THREE.Mesh) {
                     child.frustumCulled = false;
                     //模型阴影
                     child.castShadow = true;
@@ -173,6 +173,16 @@ function loadModel(modelPath: string, scale: number[], position: number[]) {
                     child.material.emissiveMap = child.material.map;
                 }
             });
+            // model.traverse(function (child: any) {
+            //     if (child.isMesh) {
+            //         child.frustumCulled = false;
+            //         //模型阴影
+            //         child.castShadow = true;
+            //         //模型自发光
+            //         child.material.emissive = child.material.color;
+            //         child.material.emissiveMap = child.material.map;
+            //     }
+            // });
             scene.add(model);
 
         }
@@ -232,7 +242,7 @@ function moveModel() {
     console.log("开始移动模型")
     if (group3_steps) {
         // const tweenTime = 100;
-        let previousTween: TWEEN.Tween = null;
+        let previousTween: TWEEN.Tween<THREE.Vector3> = null;
 
         for (let i = 0; i < group3_steps.all_steps.length; i++) {
             const coordinates: number[] = group3_steps.all_steps[i];
@@ -243,7 +253,7 @@ function moveModel() {
             const targetPosition: THREE.Vector3 = new THREE.Vector3(x, z, y);
             let distance: number = droneGroup.position.distanceTo(targetPosition);
 
-            const tween: TWEEN.Tween = new TWEEN.Tween(droneGroup.position)
+            const tween: TWEEN.Tween<THREE.Vector3> = new TWEEN.Tween(droneGroup.position)
                 .to(targetPosition, distance * 10)
                 .easing(TWEEN.Easing.Quadratic.InOut)
                 .onStart(() => {
