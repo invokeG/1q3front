@@ -173,16 +173,6 @@ function loadModel(modelPath: string, scale: number[], position: number[]) {
                     child.material.emissiveMap = child.material.map;
                 }
             });
-            // model.traverse(function (child: any) {
-            //     if (child.isMesh) {
-            //         child.frustumCulled = false;
-            //         //模型阴影
-            //         child.castShadow = true;
-            //         //模型自发光
-            //         child.material.emissive = child.material.color;
-            //         child.material.emissiveMap = child.material.map;
-            //     }
-            // });
             scene.add(model);
 
         }
@@ -206,9 +196,10 @@ async function loadAllModels() {
             const type: number = obstacle[2];
 
             if (type === 0) { // Car
-                let scale: number[] = [0.0005, 0.0005, 0.0005];
+                // let scale: number[] = [0.0005, 0.0005, 0.0005]; //for tank
+                let scale: number[] = [0.05, 0.05, 0.05];
                 let position: number[] = [x, 0, y];
-                loadModel("./models/Car/low_poly_tank.glb", scale, position);
+                loadModel("./models/Car/three_vehicles.glb", scale, position);
             } else if (type === 1) { //Ship
                 let scale: number[] = [0.05, 0.05, 0.05];
                 let position: number[] = [x, 0.1, y];
@@ -259,13 +250,9 @@ function moveModel() {
                 .onStart(() => {
                     droneGroup.lookAt(targetPosition);
                     model_drone.position.y = 5;
-                    // controls.target = targetPosition
-                    // posOfUAV.position.copy(targetPosition)
-                    // posOfUAV.position.y = 0
-
                 })
                 .onUpdate(() => {
-                    // posOfUAV.position.copy(targetPosition)
+                    
 
                 })
                 .onComplete(() => {
