@@ -5,9 +5,7 @@
                 <el-menu :default-openeds="['1', '3']">
                     <el-sub-menu index="1">
                         <template #title>
-                            <el-icon>
-                                <message />
-                            </el-icon>Navigator One
+                            <el-icon><Message /></el-icon>Navigator One
                         </template>
                         <el-menu-item-group>
                             <template #title>Group 1</template>
@@ -24,7 +22,7 @@
                     </el-sub-menu>
                     <el-sub-menu index="2">
                         <template #title>
-                            <el-icon><icon-menu /></el-icon>Navigator Two
+                            <el-icon><Menu /></el-icon>Navigator Two
                         </template>
                         <el-menu-item-group>
                             <template #title>Group 1</template>
@@ -42,7 +40,7 @@
                     <el-sub-menu index="3">
                         <template #title>
                             <el-icon>
-                                <setting />
+                                <Setting />
                             </el-icon>Navigator Three
                         </template>
                         <el-menu-item-group>
@@ -67,7 +65,7 @@
                 <div class="toolbar">
                     <el-dropdown>
                         <el-icon style="margin-right: 8px; margin-top: 1px">
-                            <setting />
+                            <Setting />
                         </el-icon>
                         <template #dropdown>
                             <el-dropdown-menu>
@@ -92,6 +90,7 @@
 
 <script setup lang="ts">
 import Threedemo from "./Threedemo.vue"
+import { Menu, Message, Setting } from '@element-plus/icons-vue'
 
 </script>
 

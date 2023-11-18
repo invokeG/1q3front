@@ -1,8 +1,9 @@
 <template>
   <div>
     <elementui></elementui>
-    <button @click="topage('/')">threejs</button>
+    <button @click="topage('/display')">threejs</button>
     <button @click="topage('/getenv')">GetEnv</button>
+    <button @click="topage('/')">Welcome</button>
     <!-- <RouterLink to="/">threejs</RouterLink>
   <RouterLink to="/getenv">GetEnv</RouterLink> -->
     <RouterView></RouterView>

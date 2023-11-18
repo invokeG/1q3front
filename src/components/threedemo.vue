@@ -43,8 +43,8 @@ onMounted(() => {
     renderer.setSize(widthofelement, heightofelement);
     document.getElementById("three").appendChild(renderer.domElement);
     console.log(document.getElementById("three").clientWidth + "////" + document.getElementById("three").clientHeight);
-    axios.get("http://192.168.31.216:8081/home/group3/getEnv")
-        // axios.get("http://192.168.0.103:8080/home/group3/getEnv")
+    // axios.get("http://192.168.31.216:8081/home/group3/getEnv")
+        axios.get("http://localhost:8080/home/group3/getEnv")
         .then(function (response) {
             group3_env = response.data;
             isEvnDone = true;
@@ -52,8 +52,8 @@ onMounted(() => {
         .catch(function (error) {
             console.log(error);
         });
-    axios.get("http://192.168.31.216:8081/home/group3/getAllSteps")
-        // axios.get("http://192.168.0.103:8080/home/group3/getAllSteps")
+    // axios.get("http://192.168.31.216:8081/home/group3/getAllSteps")
+        axios.get("http://localhost:8080/home/group3/getAllSteps")
         .then(function (response) {
             group3_steps = response.data;
             isStepDone = true;
@@ -197,13 +197,13 @@ async function loadAllModels() {
 
             if (type === 0) { // Car
                 // let scale: number[] = [0.0005, 0.0005, 0.0005]; //for tank
-                let scale: number[] = [0.05, 0.05, 0.05];
+                let scale: number[] = [0.0005, 0.0005, 0.0005];
                 let position: number[] = [x, 0, y];
-                loadModel("./models/Car/three_vehicles.glb", scale, position);
+                loadModel("./models/Car/truck.glb", scale, position);
             } else if (type === 1) { //Ship
                 let scale: number[] = [0.05, 0.05, 0.05];
                 let position: number[] = [x, 0.1, y];
-                loadModel("./models/Ship/ship.glb", scale, position);
+                loadModel("./models/Ship/low-poly_warship.glb", scale, position);
             } else if (type === 2) { //People
                 let scale: number[] = [0.001, 0.001, 0.001];
                 let position: number[] = [x, 0, y];
