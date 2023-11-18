@@ -12,9 +12,8 @@
 </template>
 
 <script lang="ts" setup>
+import router from '@/router';
 
-import { useRouter } from 'vue-router';
-const router = useRouter()
 const topage = (url: string) => {
   router.push(url)
 }

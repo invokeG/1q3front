@@ -1,3 +1,4 @@
+import { unauthorized } from "@/net";
 import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
 
 const routes: Array<RouteRecordRaw> = [
@@ -20,11 +21,29 @@ const routes: Array<RouteRecordRaw> = [
                 component: () => import("../components/Views/welcome/LoginPage.vue")
             }
         ]
+    },
+    {
+        path: "/index",
+        name: "index",
+        component: () => import("@/components/Views/index.vue")
     }
 ]
 const router = createRouter({
-    history: createWebHistory(),
+    history: createWebHistory(import.meta.env.BASE_URL),
     routes
+})
+
+router.beforeEach((to, from, next) => {
+    const isUnAuth = unauthorized();
+    const toName = to.name as string;
+    if(toName.startsWith('welcome-') && !isUnAuth){
+        next('/index');
+    }else if (to.fullPath.startsWith('/index') && isUnAuth) {
+        next('/');
+    } 
+    else {
+        next();
+    }
 })
 
 export default router
