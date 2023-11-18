@@ -30,14 +30,15 @@ function getAccessToken() {
     const str: string = localStorage.getItem(authItemName) || sessionStorage.getItem(authItemName);
     if(!str) return null
     const authObj = JSON.parse(str)
-    if(authObj.expire <= new Date().getTime()) { //new Date(authObj.expire) <= new Date()
+    console.log(authObj.expire)
+    if(new Date(authObj.expire) <= new Date()) { //new Date(authObj.expire) <= new Date()
         deleteAccessToken()
         ElMessage.warning("登录过期，请重新登录")
         return null
     }
     return authObj.token
 
-    // if (authObj.expire > new Date().getTime()) {
+    // if (new Date(authObj.expire) > new Date()) {
     //     return authObj.token;
     // }
     // deleteAccessToken();
@@ -48,7 +49,7 @@ function getAccessToken() {
     // const str: string = localStorage.getItem(authItemName) || sessionStorage.getItem(authItemName);
     // if (str) {
     //     const authObj = JSON.parse(str);
-    //     if (authObj.expire > new Date().getTime()) {
+    //     if (new Date(authObj.expire) > new Date()) {
     //         return authObj.token;
     //     } else {
     //         deleteAccessToken();
@@ -110,6 +111,7 @@ function login(username: string, password: string, remember: boolean, success: a
     }, {
         "Content-Type": "application/x-www-form-urlencoded"
     }, (data) => {
+        console.log(data)
         storeAccessToken(data.token, remember, data.expire);
         ElMessage.success(`登录成功，欢迎 ${data.username} 来到我们的系统`);
         success(data);
