@@ -28,10 +28,10 @@ function storeAccessToken(token: string, remember: boolean, expire: any) {
 
 function getAccessToken() {
     const str: string = localStorage.getItem(authItemName) || sessionStorage.getItem(authItemName);
-    if(!str) return null
+    if (!str) return null
     const authObj = JSON.parse(str)
     console.log(authObj.expire)
-    if(new Date(authObj.expire) <= new Date()) { //new Date(authObj.expire) <= new Date()
+    if (new Date(authObj.expire) <= new Date()) { //new Date(authObj.expire) <= new Date()
         deleteAccessToken()
         ElMessage.warning("登录过期，请重新登录")
         return null
@@ -44,7 +44,7 @@ function getAccessToken() {
     // deleteAccessToken();
     // ElMessage.warning("登录过期，请重新登录");
     // return null;
-    
+
 
     // const str: string = localStorage.getItem(authItemName) || sessionStorage.getItem(authItemName);
     // if (str) {
@@ -68,7 +68,7 @@ function deleteAccessToken() {
 function getHeader() {
     const token = getAccessToken();
     return token ? {
-        'Authrization': `Bearer ${getAccessToken()}`
+        'Authorization': `Bearer ${getAccessToken()}`
     } : {};
 }
 
@@ -86,8 +86,8 @@ function internalPost(url: string, data: any, header: any, success: any, failure
 
 function internalGet(url: string, header: any, success: any, failure: Function, error = defaultError) {
     axios.get(url, { headers: header }).then(({ data }) => {
-        if (data.code == 200) {
-            success(data.data)
+        if (data.code === 200) {
+            success(data.data);
         } else {
             failure(data.message, data.code, url);
         }
@@ -97,8 +97,9 @@ function internalGet(url: string, header: any, success: any, failure: Function, 
 }
 
 function get(url: string, success: any, failure = defaultFaliure) {
-    internalGet(url, getHeader(), success, failure);
+    internalGet(url, getHeader(), success, failure)
 }
+
 
 function post(url: string, data: any, success: any, failure = defaultFaliure) {
     internalPost(url, data, getHeader(), success, failure);
@@ -125,6 +126,7 @@ function logout(success: any, failure = defaultFaliure) {
         success();
     }, failure)
 }
+
 
 function unauthorized() {
     return !getAccessToken();
