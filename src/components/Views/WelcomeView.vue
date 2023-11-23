@@ -12,9 +12,12 @@
         </div>
 
         <div class="right-card">
-            <RouterView/>
+            <RouterView v-slot="{ Component }">
+                <transition name="el-zoom-in-center" mode="out-in">
+                    <component :is="Component" />
+                </transition>
+            </RouterView>
         </div> 
-        
     </div> 
 
 </template>
