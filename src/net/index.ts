@@ -132,5 +132,21 @@ function unauthorized() {
     return !getAccessToken();
 }
 
-export { login, logout, get, post, unauthorized }
+function askCode(email, coldTime) {
+    coldTime.value = 10;
+    get(`/api/auth/ask-code?email=${email}&type=register`, () => {
+        ElMessage.success(`验证码已发送到邮箱：${email}，请查收`);
+        const handel = setInterval(() => {
+            coldTime.value--;
+            if (coldTime.value == 0) {
+                clearInterval(handel)
+            }
+        }, 1000)
+    }, (message) => {
+        ElMessage.error(message);
+        coldTime.value = 0;
+    })
+}
+
+export { login, logout, get, post, unauthorized, askCode }
 

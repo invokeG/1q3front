@@ -54,7 +54,7 @@
                             </el-input>
                         </el-col>
                         <el-col :span="5">
-                            <el-button type="success" @click="askCOde" :disabled="!isEmailValid || coldTime">
+                            <el-button type="success" @click="handleAskCode" :disabled="!isEmailValid || coldTime">
                                 {{ coldTime > 0 ? `请稍后，${coldTime} 秒` : '获取验证码' }}
                             </el-button>
                         </el-col>
@@ -73,11 +73,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
-import { User, Lock, Message, EditPen } from '@element-plus/icons-vue'
-import router from '@/router'
-import { get, post } from '@/net'
+import { computed, reactive, ref } from 'vue';
+import { User, Lock, Message, EditPen } from '@element-plus/icons-vue';
+import router from '@/router';
+import { post, askCode } from '@/net';
 import { ElMessage } from 'element-plus';
+import { validatePassword } from '@/utils/util';
 
 const form = reactive({
     username: '',
@@ -97,14 +98,8 @@ const validateUsername = (_rule: any, value: any, callback: any) => {
     }
 }
 
-const validatePassword = (_rule: any, value: any, callback: any) => {
-    if (value == '') {
-        callback(new Error('请再次输入密码'))
-    } else if (value !== form.password) {
-        callback(new Error('两次输入的密码不一致，请重新输入'))
-    } else {
-        callback()
-    }
+const handelvalidatePassword = (_rule, value, callback) => {
+    validatePassword(_rule, value, callback, form)
 }
 
 const rule = {
@@ -116,7 +111,7 @@ const rule = {
         { min: 6, max: 20, message: '密码长度在6到20个字符', trigger: ['blur', 'change'] }
     ],
     password_repeat: [
-        { validator: validatePassword, trigger: ['blur', 'change'] },
+        { validator: handelvalidatePassword, trigger: ['blur', 'change'] },
     ],
     email: [
         { required: true, message: '请输入邮件地址', trigger: 'blur' },
@@ -133,21 +128,26 @@ const isEmailValid = computed(() => {
     return /^[\w.-]+@[\w.-]+\.\w+$/.test(form.email);
 })
 
-function askCOde() {
-    coldTime.value = 10;
-    get(`/api/auth/ask-code?email=${form.email}&type=register`, () => {
-        ElMessage.success(`验证码已发送到邮箱：${form.email}，请查收`);
-        const handel = setInterval(() => {
-            coldTime.value--;
-            if (coldTime.value == 0) {
-                clearInterval(handel)
-            }
-        }, 1000)
-    }, (message) => {
-        ElMessage.error(message);
-        coldTime.value = 0;
-    })
-}
+// function askCode(email, coldTime) {
+//     coldTime.value = 10;
+//     get(`/api/auth/ask-code?email=${email}&type=register`, () => {
+//         ElMessage.success(`验证码已发送到邮箱：${email}，请查收`);
+//         const handel = setInterval(() => {
+//             coldTime.value--;
+//             if (coldTime.value == 0) {
+//                 clearInterval(handel)
+//             }
+//         }, 1000)
+//     }, (message) => {
+//         ElMessage.error(message);
+//         coldTime.value = 0;
+//     })
+// }
+
+
+const handleAskCode = () => {
+  askCode(form.email, coldTime);
+};
 
 const formRef = ref();
 

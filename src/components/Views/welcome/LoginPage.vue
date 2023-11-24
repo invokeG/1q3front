@@ -27,11 +27,11 @@
                 <el-row>
                     <el-col :span="12" style="text-align: left">
                         <el-form-item prop="remember">
-                            <el-checkbox v-model="form.remember">记住我</el-checkbox>
+                            <el-checkbox v-model="form.remember">记住用户名 </el-checkbox>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12" style="text-align: right">
-                        <el-link>忘记密码？</el-link>
+                        <el-link @click="reset">忘记密码？</el-link>
                     </el-col>
                 </el-row>
             </el-form>
@@ -63,6 +63,14 @@ const form = reactive({
     remember: false,
 });
 
+const rememberedUser = localStorage.getItem('rememberedUser');
+
+if (rememberedUser) {
+    const { username } = JSON.parse(rememberedUser);
+    form.username = username;
+    form.remember = true; 
+}
+
 const rule = {
     username: [
         { required: true, message: "请输入用户名或邮箱"},
@@ -76,6 +84,9 @@ function userLogin() {
     formRef.value.validate((valid: any) => {
         if (valid) {
             login(form.username, form.password, form.remember, () => {
+                if (form.remember) {
+                    localStorage.setItem('rememberedUser', JSON.stringify({ username: form.username }));
+                }
                 router.push("/index")
              })
         }
@@ -84,6 +95,10 @@ function userLogin() {
 
 function register() {
     router.push("/register")
+}
+
+function reset(){
+    router.push("/reset")
 }
 </script>
 
