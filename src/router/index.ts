@@ -4,10 +4,12 @@ import { RouteRecordRaw, createRouter, createWebHistory } from "vue-router";
 const routes: Array<RouteRecordRaw> = [
     {
         path: "/display",
+        name: "display",
         component: () => import("../components/Elementui.vue")
     },
     {
         path: "/getenv",
+        name: "getenv",
         component: () => import("../components/GetEnv.vue")
     },
     {

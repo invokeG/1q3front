@@ -1,22 +1,29 @@
 <template>
   <div>
     <elementui></elementui>
-    <button @click="topage('/display')">threejs</button>
-    <button @click="topage('/getenv')">GetEnv</button>
-    <button @click="topage('/')">Welcome</button>
-    <!-- <RouterLink to="/">threejs</RouterLink>
-  <RouterLink to="/getenv">GetEnv</RouterLink> -->
+    <button @click="router.push('/display')">threejs</button>
+    <button @click="router.push('/getenv')">GetEnv</button>
+    <button @click="router.push('/')">Welcome</button>
     <RouterView></RouterView>
-    <!-- <GetEnv></GetEnv> -->
   </div>
 </template>
 
 <script lang="ts" setup>
 import router from '@/router';
+import { useDark, useToggle } from '@vueuse/core';
 
-const topage = (url: string) => {
-  router.push(url)
-}
+useDark({
+  selector: 'html',
+  attribute: 'class',
+  valueDark: 'dark',
+  valueLight: 'light',
+})
+
+useDark({
+  onChanged(dark) { useToggle(dark) }
+})
+
+
 
 </script>
 

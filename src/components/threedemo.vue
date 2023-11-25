@@ -44,7 +44,7 @@ onMounted(() => {
     document.getElementById("three").appendChild(renderer.domElement);
     console.log(document.getElementById("three").clientWidth + "////" + document.getElementById("three").clientHeight);
     // axios.get("http://192.168.31.216:8081/home/group3/getEnv")
-        axios.get("http://localhost:8080/home/group3/getEnv")
+    axios.get("http://localhost:8080/home/group3/getEnv")
         .then(function (response) {
             group3_env = response.data;
             isEvnDone = true;
@@ -53,7 +53,7 @@ onMounted(() => {
             console.log(error);
         });
     // axios.get("http://192.168.31.216:8081/home/group3/getAllSteps")
-        axios.get("http://localhost:8080/home/group3/getAllSteps")
+    axios.get("http://localhost:8080/home/group3/getAllSteps")
         .then(function (response) {
             group3_steps = response.data;
             isStepDone = true;
@@ -109,6 +109,31 @@ const gltfLoader: GLTFLoader = new GLTFLoader();
 //加载UAV
 const droneGroup: THREE.Group = new THREE.Group();
 
+function checkConditionsAndProceed() {
+    if (isStepDone && isEvnDone && model_drone) {
+        console.log("更新模型位置");
+
+        posOfUAV.position.copy(model_drone.position);
+        posOfUAV.position.y = 0;
+        posOfUAV.rotation.x = -Math.PI / 2;
+
+        sightOfUAV.position.copy(model_drone.position.clone().add(new THREE.Vector3(0, 0, 3.5)));
+        sightOfUAV.position.y = 0;
+        sightOfUAV.rotation.x = -Math.PI / 2;
+
+        droneGroup.add(model_drone);
+        droneGroup.add(posOfUAV);
+        droneGroup.add(sightOfUAV);
+        droneGroup.position.set(group3_env.start_pos[0], 0, group3_env.start_pos[1]);
+        scene.add(droneGroup);
+
+        moveModel();
+    } else {
+        // 如果条件不满足，等待一段时间后再次检查
+        setTimeout(checkConditionsAndProceed, 100); // 每 100 毫秒检查一次
+    }
+}
+
 gltfLoader.load(
     //模型路径
     "./models/UAV/low-poly_uav.glb",
@@ -116,8 +141,7 @@ gltfLoader.load(
         console.log(gltf);
         model_drone = gltf.scene;
         model_drone.scale.set(0.5, 0.5, 0.5);
-
-
+        console.log("UAV加载完成");
         //创建投影面
         const circleGeometry: THREE.CircleGeometry = new THREE.CircleGeometry(0.1, 32);
         const circleMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
@@ -128,28 +152,56 @@ gltfLoader.load(
         const planeMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xccffff, side: THREE.DoubleSide });
         sightOfUAV = new THREE.Mesh(planeGeometry, planeMaterial);
 
-        // 检查是否请求完成并更新模型位置
-        if (isStepDone && isEvnDone && model_drone) {
-
-            posOfUAV.position.copy(model_drone.position);
-            posOfUAV.position.y = 0;
-            posOfUAV.rotation.x = -Math.PI / 2;
-
-            sightOfUAV.position.copy(model_drone.position.clone().add(new THREE.Vector3(0, 0, 3.5)));
-            sightOfUAV.position.y = 0;
-            sightOfUAV.rotation.x = -Math.PI / 2;
-
-            droneGroup.add(model_drone);
-            droneGroup.add(posOfUAV);
-            droneGroup.add(sightOfUAV);
-            droneGroup.position.set(group3_env.start_pos[0], 0, group3_env.start_pos[1]);
-            scene.add(droneGroup);
-
-
-            moveModel();
-        }
+        // 开始检查条件并执行后续操作
+        checkConditionsAndProceed();
     }
-)
+);
+
+
+// gltfLoader.load(
+//     //模型路径
+//     "./models/UAV/low-poly_uav.glb",
+//     (gltf: { scene: any }) => {
+//         console.log(gltf);
+//         model_drone = gltf.scene;
+//         model_drone.scale.set(0.5, 0.5, 0.5);
+//         console.log("UAV加载完成")
+
+
+//         //创建投影面
+//         const circleGeometry: THREE.CircleGeometry = new THREE.CircleGeometry(0.1, 32);
+//         const circleMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
+//         posOfUAV = new THREE.Mesh(circleGeometry, circleMaterial);
+
+//         //添加一个矩形表示UAV可见区域
+//         const planeGeometry: THREE.PlaneGeometry = new THREE.PlaneGeometry(7, 7);
+//         const planeMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xccffff, side: THREE.DoubleSide });
+//         sightOfUAV = new THREE.Mesh(planeGeometry, planeMaterial);
+
+//         // 检查是否请求完成并更新模型位置
+//         if (isStepDone && isEvnDone && model_drone) {
+
+//             console.log("更新模型位置");
+
+//             posOfUAV.position.copy(model_drone.position);
+//             posOfUAV.position.y = 0;
+//             posOfUAV.rotation.x = -Math.PI / 2;
+
+//             sightOfUAV.position.copy(model_drone.position.clone().add(new THREE.Vector3(0, 0, 3.5)));
+//             sightOfUAV.position.y = 0;
+//             sightOfUAV.rotation.x = -Math.PI / 2;
+
+//             droneGroup.add(model_drone);
+//             droneGroup.add(posOfUAV);
+//             droneGroup.add(sightOfUAV);
+//             droneGroup.position.set(group3_env.start_pos[0], 0, group3_env.start_pos[1]);
+//             scene.add(droneGroup);
+
+
+//             moveModel();
+//         }
+//     }
+// )
 
 
 
@@ -159,7 +211,6 @@ function loadModel(modelPath: string, scale: number[], position: number[]) {
     gltfLoader.load(
         modelPath,
         (gltf: any) => {
-            console.log(gltf);
             model = gltf.scene;
             model.scale.set(scale[0], scale[1], scale[2]);
             model.position.set(position[0], position[1], position[2]);
@@ -252,7 +303,7 @@ function moveModel() {
                     model_drone.position.y = 5;
                 })
                 .onUpdate(() => {
-                    
+
 
                 })
                 .onComplete(() => {
