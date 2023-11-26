@@ -2,13 +2,8 @@
 
 <p align="center">
   <img alt="Static Badge" src="https://img.shields.io/badge/Vue-3.3.4-green">
-  ![](https://img.shields.io/badge/vite-4.4.5-blue.svg)] 
-  ![](https://img.shields.io/badge/typescript-5.0.2-blue.svg)] 
-  [![NPM Package][npm]][npm-url]
-  [![Build Size][build-size]][build-size-url]
-  [![NPM Downloads][npm-downloads]][npmtrends-url]
-  [![DeepScan][deepscan]][deepscan-url]
-  [![Discord][discord]][discord-url]
+  <img alt="Static Badge" src="https://img.shields.io/badge/Vite-3.3.4-lightgreen">
+  <img alt="Static Badge" src="https://img.shields.io/badge/TypeScript-5.0.2-blue">
   <br>
 </p>
 
