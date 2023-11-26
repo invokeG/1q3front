@@ -1,7 +1,7 @@
 # Vite + Vue3 + TS + Tress.js
 
 <p align="center">
-  <img alt="Static Badge" src="https://img.shields.io/badge/VUE-3.3.4-green">
+  <img alt="Static Badge" src="https://img.shields.io/badge/Vue-3.3.4-green">
   ![](https://img.shields.io/badge/vite-4.4.5-blue.svg)] 
   ![](https://img.shields.io/badge/typescript-5.0.2-blue.svg)] 
   [![NPM Package][npm]][npm-url]
