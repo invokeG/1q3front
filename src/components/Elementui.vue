@@ -1,16 +1,18 @@
 <template>
-    <el-container class="layout-container-demo" style="height: 100vh">
+    <el-container class="layout-container-demo" style=" height: 100vh">
         <el-aside width="200px">
             <el-scrollbar>
                 <el-menu :default-openeds="['1', '3']">
                     <el-sub-menu index="1">
                         <template #title>
-                            <el-icon><Message /></el-icon>Navigator One
+                            <el-icon>
+                                <Message />
+                            </el-icon>Navigator One
                         </template>
                         <el-menu-item-group>
                             <template #title>Group 1</template>
-                            <el-menu-item index="1-1">Option 1</el-menu-item>
-                            <el-menu-item index="1-2">Option 2</el-menu-item>
+                            <el-menu-item index="1-1" @click="() => handleMenuItemClick('1-1')">Option 1</el-menu-item>
+                            <el-menu-item index="1-2" @click="() => handleMenuItemClick('1-2')">Option 2</el-menu-item>
                         </el-menu-item-group>
                         <el-menu-item-group title="Group 2">
                             <el-menu-item index="1-3">Option 3</el-menu-item>
@@ -22,7 +24,9 @@
                     </el-sub-menu>
                     <el-sub-menu index="2">
                         <template #title>
-                            <el-icon><Menu /></el-icon>Navigator Two
+                            <el-icon>
+                                <Menu />
+                            </el-icon>Navigator Two
                         </template>
                         <el-menu-item-group>
                             <template #title>Group 1</template>
@@ -79,10 +83,10 @@
                 </div>
             </el-header>
             <el-main>
-                <div>
-                    <Threedemo class="three"></Threedemo>
+                <div class="center-container">
+                    <!-- <Threedemo class="three"></Threedemo> -->
+                    <component :is="currentComponent"></component>
                 </div>
-                <h1></h1>
             </el-main>
         </el-container>
     </el-container>
@@ -90,7 +94,29 @@
 
 <script setup lang="ts">
 import Threedemo from "./Threedemo.vue"
+import GetEnv from "./GetEnv.vue"
+import HelloPage from "./HelloPage.vue"
 import { Menu, Message, Setting } from '@element-plus/icons-vue'
+import { ref, onMounted } from "vue";
+
+const currentComponent = ref<ReturnType<typeof defineProps> | null>(null);
+
+const handleMenuItemClick = (index: string) => {
+  // Update the currentComponent based on the clicked menu item
+  switch (index) {
+    case "1-1":
+      currentComponent.value = Threedemo;
+      break;
+    case "1-2":
+      currentComponent.value = GetEnv;
+      break;
+      currentComponent.value = HelloPage;
+  }
+};
+
+onMounted(() => {
+  currentComponent.value = HelloPage;
+});
 
 </script>
 
@@ -112,9 +138,10 @@ import { Menu, Message, Setting } from '@element-plus/icons-vue'
 
 .layout-container-demo .el-main {
     padding: 0;
-    display: flex;
+    /* display: flex; */
     flex-direction: row;
-    align-items: flex-start
+    align-items: flex-start;
+    flex: 1;
 }
 
 .layout-container-demo .toolbar {
@@ -125,8 +152,10 @@ import { Menu, Message, Setting } from '@element-plus/icons-vue'
     right: 20px;
 }
 
-/* .three {
-    float: left;
-} */
+.layout-container-demo .center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 </style>

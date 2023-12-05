@@ -1,11 +1,48 @@
 <template>
-    <div id="three" style="width: 50vw; height: 50vw;"></div>
+    <div style="width: 100vw; height: 100vh">
+        <div style="display: flex;">
+            <div id="three" style="width: 50vw; height: 50vw; text-align: left"></div>
+            <div>
+                <el-card class="box-card">
+                    <template #header>
+                        <div class="card-header">
+                            <span>指标1</span>
+                        </div>
+                    </template>
+                    <div v-for="o in 4" :key="o" class="text item">{{ '数据 ' + o }}</div>
+                    <template #footer>Footer content</template>
+                </el-card>
+            </div>
+            <div>
+                <el-card class="box-card">
+                    <template #header>
+                        <div class="card-header">
+                            <span>指标2</span>
+                        </div>
+                    </template>
+                    <div v-for="o in 4" :key="o" class="text item">{{ '数据 ' + o }}</div>
+                    <template #footer>Footer content</template>
+                </el-card>
+            </div>
+            <div>
+                <el-card class="box-card">
+                    <template #header>
+                        <div class="card-header">
+                            <span>UAV实时坐标</span>
+                        </div>
+                    </template>
+                    <div class="text item">{{ locationOfUAV }}</div>
+                    <template #footer>Footer content</template>
+                </el-card>
+            </div>
+        </div>
+    </div>
 </template>
   
 <script lang="ts" setup>
 
 import * as THREE from 'three'
-import { onMounted, watch } from 'vue'
+import { onMounted, watch, ref } from 'vue'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import * as TWEEN from 'three/examples/jsm/libs/tween.module.js'
@@ -29,6 +66,8 @@ let model_drone: THREE.Scene;
 let model: THREE.Scene;
 let posOfUAV: THREE.Mesh;
 let sightOfUAV: THREE.Mesh;
+
+let locationOfUAV = ref();
 
 //创建场景
 const scene: THREE.Scene = new THREE.Scene();
@@ -303,8 +342,7 @@ function moveModel() {
                     model_drone.position.y = 5;
                 })
                 .onUpdate(() => {
-
-
+                    locationOfUAV.value = coordinates;
                 })
                 .onComplete(() => {
 
@@ -398,4 +436,22 @@ animate();
 
 </script>
   
-<style></style>
+<style>
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.text {
+    font-size: 14px;
+}
+
+.item {
+    margin-bottom: 18px;
+}
+
+.box-card {
+    width: 200px;
+}
+</style>

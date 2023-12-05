@@ -87,7 +87,7 @@ function userLogin() {
                 if (form.remember) {
                     localStorage.setItem('rememberedUser', JSON.stringify({ username: form.username }));
                 }
-                router.push("/index")
+                router.push("/display")
              })
         }
     })
