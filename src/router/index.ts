@@ -35,9 +35,9 @@ const routes: Array<RouteRecordRaw> = [
         ]
     },
     {
-        path: "/index",
-        name: "index",
-        component: () => import("@/components/Views/index.vue")
+        path: "/logout",
+        name: "logout",
+        component: () => import("@/components/Views/LogoutPage.vue")
     }
 ]
 const router = createRouter({
@@ -45,7 +45,7 @@ const router = createRouter({
     routes
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
     const isUnAuth = unauthorized();
     const toName = to.name as string;
     if(toName.startsWith('welcome-') && !isUnAuth){

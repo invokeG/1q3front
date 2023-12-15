@@ -75,11 +75,11 @@
                             <el-dropdown-menu>
                                 <el-dropdown-item>View</el-dropdown-item>
                                 <el-dropdown-item>Add</el-dropdown-item>
-                                <el-dropdown-item>Delete</el-dropdown-item>
+                                <el-dropdown-item @click="userLogout">Logout</el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
                     </el-dropdown>
-                    <span>Tom</span>
+                    <span>User</span>
                 </div>
             </el-header>
             <el-main>
@@ -93,11 +93,13 @@
 </template>
 
 <script setup lang="ts">
-import Threedemo from "./Threedemo.vue"
-import GetEnv from "./GetEnv.vue"
+import threePage from "./ThreePage.vue"
+import getEnvPage from "./GetEnv.vue"
 import HelloPage from "./HelloPage.vue"
 import { Menu, Message, Setting } from '@element-plus/icons-vue'
 import { ref, onMounted } from "vue";
+import { logout } from "@/net";
+import router from "@/router";
 
 const currentComponent = ref<ReturnType<typeof defineProps> | null>(null);
 
@@ -105,14 +107,19 @@ const handleMenuItemClick = (index: string) => {
   // Update the currentComponent based on the clicked menu item
   switch (index) {
     case "1-1":
-      currentComponent.value = Threedemo;
+      currentComponent.value = threePage;
       break;
     case "1-2":
-      currentComponent.value = GetEnv;
+      currentComponent.value = getEnvPage;
       break;
+    default:
       currentComponent.value = HelloPage;
   }
 };
+
+function userLogout() {
+    logout(() => router.push("/"))
+}
 
 onMounted(() => {
   currentComponent.value = HelloPage;
