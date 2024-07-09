@@ -18,6 +18,10 @@
 
 ```npm run dev```
 
+## Ref
+Three.js: https://threejs.org/docs/index.html#manual/zh/introduction/Creating-a-scene
+ElementUI: https://element-plus.org/zh-CN/component/layout.html
+
 
 
 
