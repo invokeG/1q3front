@@ -1,6 +1,6 @@
 # 1Q3Front
 
-## Vite + Vue3 + TS + Tress.js
+## Vite + Vue3 + TS + Three.js
 
 <p align="center">
   <img alt="Static Badge" src="https://img.shields.io/badge/Vue-3.3.4-green">
