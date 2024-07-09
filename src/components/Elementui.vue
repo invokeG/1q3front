@@ -6,7 +6,7 @@
                     <el-sub-menu index="1">
                         <template #title>
                             <el-icon>
-                                <Message />
+                                <message />
                             </el-icon>Navigator One
                         </template>
                         <el-menu-item-group>
@@ -25,7 +25,7 @@
                     <el-sub-menu index="2">
                         <template #title>
                             <el-icon>
-                                <Menu />
+                                <icon-menu />
                             </el-icon>Navigator Two
                         </template>
                         <el-menu-item-group>
@@ -44,7 +44,7 @@
                     <el-sub-menu index="3">
                         <template #title>
                             <el-icon>
-                                <Setting />
+                                <setting />
                             </el-icon>Navigator Three
                         </template>
                         <el-menu-item-group>
@@ -96,7 +96,8 @@
 import threePage from "./ThreePage.vue"
 import getEnvPage from "./GetEnv.vue"
 import HelloPage from "./HelloPage.vue"
-import { Menu, Message, Setting } from '@element-plus/icons-vue'
+import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
+// import { Menu, Message, Setting } from '@element-plus/icons-vue'
 import { ref, onMounted } from "vue";
 import { logout } from "@/net";
 import router from "@/router";
