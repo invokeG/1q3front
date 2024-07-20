@@ -25,7 +25,7 @@
                         </div>
                     </template>
                     <div class="text item">决策准确率：{{g2_1}}</div>
-                    <div class="text item">决策时间：{{g2_2}}</div>
+                    <div class="text item">平均单步决策时间：{{g2_2}}</div>
                     <!-- <div v-for="o in 4" :key="o" class="text item">{{ '数据 ' + o }}</div> -->
                     <template #footer>Footer content</template>
                 </el-card>

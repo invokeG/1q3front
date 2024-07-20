@@ -1,29 +1,35 @@
 <template>
     <el-container class="layout-container-demo" style=" height: 100vh">
-        <el-aside width="200px">
+        <el-aside width="250px">
             <el-scrollbar>
                 <el-menu :default-openeds="['1', '3']">
                     <el-sub-menu index="1">
                         <template #title>
                             <el-icon>
-                                <message />
-                            </el-icon>Navigator One
+                                <DataBoard />
+                            </el-icon>无人机群智能计算演示系统
                         </template>
                         <el-menu-item-group>
-                            <template #title>标题位置</template>
-                            <el-menu-item index="1-0" @click="() => handleMenuItemClick('1-0')">无人机侦查阶段</el-menu-item>
-                            <el-menu-item index="1-1" @click="() => handleMenuItemClick('1-1')">无人机寻路与打击阶段</el-menu-item>
-                            <el-menu-item index="1-2" @click="() => handleMenuItemClick('1-2')">getEnv</el-menu-item>
+                            <template #title>轻量化智能决策</template>
+                            <el-menu-item index="1-0" @click="() => handleMenuItemClick('1-0')">
+                                <el-icon>
+                                    <Position />
+                                </el-icon>无人机侦查阶段</el-menu-item>
+                            <el-menu-item index="1-1" @click="() => handleMenuItemClick('1-1')">
+                                <el-icon>
+                                    <Place />
+                                </el-icon>无人机打击阶段</el-menu-item>
+                            <!-- <el-menu-item index="1-2" @click="() => handleMenuItemClick('1-2')">getEnv</el-menu-item> -->
                         </el-menu-item-group>
-                        <el-menu-item-group title="Group 2">
+                        <!-- <el-menu-item-group title="Group 2">
                             <el-menu-item index="1-3">Option 3</el-menu-item>
                         </el-menu-item-group>
                         <el-sub-menu index="1-4">
                             <template #title>Option4</template>
                             <el-menu-item index="1-4-1">Option 4-1</el-menu-item>
-                        </el-sub-menu>
+                        </el-sub-menu> -->
                     </el-sub-menu>
-                    <el-sub-menu index="2">
+                    <!-- <el-sub-menu index="2">
                         <template #title>
                             <el-icon>
                                 <icon-menu />
@@ -60,7 +66,7 @@
                             <template #title>Option 4</template>
                             <el-menu-item index="3-4-1">Option 4-1</el-menu-item>
                         </el-sub-menu>
-                    </el-sub-menu>
+                    </el-sub-menu> -->
                 </el-menu>
             </el-scrollbar>
         </el-aside>
@@ -98,7 +104,7 @@ import threePage from "./ThreePage.vue"
 import getEnvPage from "./GetEnv.vue"
 import helloPage from "./HelloPage.vue"
 import detectionPage from "./DetectionPage.vue"
-import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
+// import { Menu as IconMenu, Position, Setting } from '@element-plus/icons-vue'
 // import { Menu, Message, Setting } from '@element-plus/icons-vue'
 import { ref, onMounted } from "vue";
 import { logout } from "@/net";
@@ -107,20 +113,20 @@ import router from "@/router";
 const currentComponent = ref<ReturnType<typeof defineProps> | null>(null);
 
 const handleMenuItemClick = (index: string) => {
-  // Update the currentComponent based on the clicked menu item
-  switch (index) {
-    case "1-0":
-      currentComponent.value = detectionPage;
-      break;
-    case "1-1":
-      currentComponent.value = threePage;
-      break;
-    case "1-2":
-      currentComponent.value = getEnvPage;
-      break;
-    default:
-      currentComponent.value = helloPage;
-  }
+    // Update the currentComponent based on the clicked menu item
+    switch (index) {
+        case "1-0":
+            currentComponent.value = detectionPage;
+            break;
+        case "1-1":
+            currentComponent.value = threePage;
+            break;
+        case "1-2":
+            currentComponent.value = getEnvPage;
+            break;
+        default:
+            currentComponent.value = helloPage;
+    }
 };
 
 function userLogout() {
@@ -128,7 +134,7 @@ function userLogout() {
 }
 
 onMounted(() => {
-  currentComponent.value = helloPage;
+    currentComponent.value = helloPage;
 });
 
 </script>
@@ -166,9 +172,8 @@ onMounted(() => {
 }
 
 .layout-container-demo .center-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
 </style>
