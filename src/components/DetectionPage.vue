@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 100vw; height: 100vh">
+    <div style="width: 100vw; height: 100vh; position: relative;">
         <div style="display: flex;">
             <div id="three" style="width: 50vw; height: 50vw; text-align: left"></div>
             <div>
@@ -11,21 +11,8 @@
                     </template>
                     <div class="text item">单步决策成功率: 0.99</div>
                     <div class="text item">单步决策时间: 9ms</div>
-                    <div class="text item">整体决策成功率: {{g3_3}}</div>
-                    <div class="text item">五倍加速: {{g3_4}}</div>
-                    <!-- <div v-for="o in 4" :key="o" class="text item">{{ '数据 ' + o }}</div> -->
-                    <template #footer>Footer content</template>
-                </el-card>
-            </div>
-            <div>
-                <el-card class="box-card">
-                    <template #header>
-                        <div class="card-header">
-                            <span>自主和协同阶段</span>
-                        </div>
-                    </template>
-                    <div class="text item">决策准确率：{{g2_1}}</div>
-                    <div class="text item">决策时间：{{g2_2}}</div>
+                    <div class="text item">整体决策成功率: {{ g3_3 }}</div>
+                    <div class="text item">五倍加速: {{ g3_4 }}</div>
                     <!-- <div v-for="o in 4" :key="o" class="text item">{{ '数据 ' + o }}</div> -->
                     <template #footer>Footer content</template>
                 </el-card>
@@ -40,6 +27,11 @@
                     <div class="text item">{{ locationOfUAV }}</div>
                     <template #footer>Footer content</template>
                 </el-card>
+            </div>
+            <div style="width: 20%; position: relative;">
+                <video id="videoPlayer" controls
+                    style="width: 100%; height: auto;"></video>
+                    <!-- style="width: 376px; height: 214px; object-fit: cover;" -->
             </div>
         </div>
     </div>
@@ -61,11 +53,12 @@ interface Env {
 }
 
 interface Step {
-    all_steps: number[][];
+    go_steps: number[][];
+    back_steps: number[][];
 }
 
 let group3_env: Env;
-let group3_steps: Step;
+let group3_detection_steps: Step;
 let isEvnDone: boolean = false;
 let isStepDone: boolean = false;
 let model_drone: THREE.Scene;
@@ -76,9 +69,7 @@ let sightOfUAV: THREE.Mesh;
 let locationOfUAV = ref();
 // let isDetectionDone = ref(false);
 // const isHitDone = ref(false)
-let g2_1 = ref<number|null|string>(null);
-let g2_2 = ref<string>("N/A");
-let g3_3 = ref<number|null|string>(null);
+let g3_3 = ref<number | null | string>(null);
 let g3_4 = ref<string>("N/A");
 
 
@@ -96,8 +87,8 @@ onMounted(() => {
     renderer.setSize(widthofelement, heightofelement);
     document.getElementById("three").appendChild(renderer.domElement);
     console.log(document.getElementById("three").clientWidth + "////" + document.getElementById("three").clientHeight);
-    
-    // 二组战场环境
+
+    // 第二组战场环境
     // axios.get("http://192.168.31.216:8081/home/group3/getEnv")
     axios.get("http://localhost:8080/home/group3/getEnv")
         .then(function (response) {
@@ -108,11 +99,10 @@ onMounted(() => {
             console.log(error);
         });
 
-    // 二组打击寻路
-    // axios.get("http://192.168.31.216:8081/home/group3/getAllSteps")
-    axios.get("http://localhost:8080/home/group3/getAllSteps")
+    // 第二组侦查路径和返航路径
+    axios.get("http://localhost:8080/home/group3/getDetection")
         .then(function (response) {
-            group3_steps = response.data;
+            group3_detection_steps = response.data;
             isStepDone = true;
         })
         .catch(function (error) {
@@ -148,7 +138,8 @@ setTimeout(() => {
     }
 
     if (isStepDone) {
-        console.log(group3_steps.all_steps);
+        console.log(group3_detection_steps.go_steps);
+        console.log(group3_detection_steps.back_steps);
     } else {
         console.log("请稍等，无人机路线数据还在加载中…");
     }
@@ -213,55 +204,6 @@ gltfLoader.load(
         checkConditionsAndProceed();
     }
 );
-
-
-
-// gltfLoader.load(
-//     //模型路径
-//     "./models/UAV/low-poly_uav.glb",
-//     (gltf: { scene: any }) => {
-//         console.log(gltf);
-//         model_drone = gltf.scene;
-//         model_drone.scale.set(0.5, 0.5, 0.5);
-//         console.log("UAV加载完成")
-
-
-//         //创建投影面
-//         const circleGeometry: THREE.CircleGeometry = new THREE.CircleGeometry(0.1, 32);
-//         const circleMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, side: THREE.DoubleSide });
-//         posOfUAV = new THREE.Mesh(circleGeometry, circleMaterial);
-
-//         //添加一个矩形表示UAV可见区域
-//         const planeGeometry: THREE.PlaneGeometry = new THREE.PlaneGeometry(7, 7);
-//         const planeMaterial: THREE.MeshBasicMaterial = new THREE.MeshBasicMaterial({ color: 0xccffff, side: THREE.DoubleSide });
-//         sightOfUAV = new THREE.Mesh(planeGeometry, planeMaterial);
-
-//         // 检查是否请求完成并更新模型位置
-//         if (isStepDone && isEvnDone && model_drone) {
-
-//             console.log("更新模型位置");
-
-//             posOfUAV.position.copy(model_drone.position);
-//             posOfUAV.position.y = 0;
-//             posOfUAV.rotation.x = -Math.PI / 2;
-
-//             sightOfUAV.position.copy(model_drone.position.clone().add(new THREE.Vector3(0, 0, 3.5)));
-//             sightOfUAV.position.y = 0;
-//             sightOfUAV.rotation.x = -Math.PI / 2;
-
-//             droneGroup.add(model_drone);
-//             droneGroup.add(posOfUAV);
-//             droneGroup.add(sightOfUAV);
-//             droneGroup.position.set(group3_env.start_pos[0], 0, group3_env.start_pos[1]);
-//             scene.add(droneGroup);
-
-
-//             moveModel();
-//         }
-//     }
-// )
-
-
 
 
 //模型加载
@@ -340,12 +282,57 @@ loadAllModels();
 
 function moveModel() {
     console.log("开始移动模型")
-    if (group3_steps) {
+    if (group3_detection_steps) {
         // const tweenTime = 100;
         let previousTween: TWEEN.Tween<THREE.Vector3> = null;
 
-        for (let i = 0; i < group3_steps.all_steps.length; i++) {
-            const coordinates: number[] = group3_steps.all_steps[i];
+        // go
+        for (let i = 0; i < group3_detection_steps.go_steps.length; i++) {
+            const coordinates: number[] = group3_detection_steps.go_steps[i];
+            const x: number = coordinates[0];
+            const y: number = coordinates[1];
+            const z: number = 0;
+            const type: number = coordinates[2];
+
+            const targetPosition: THREE.Vector3 = new THREE.Vector3(x, z, y);
+            let distance: number = droneGroup.position.distanceTo(targetPosition);
+
+            const tween: TWEEN.Tween<THREE.Vector3> = new TWEEN.Tween(droneGroup.position)
+                .to(targetPosition, distance * 10)
+                .easing(TWEEN.Easing.Quadratic.InOut)
+                .onStart(() => {
+                    droneGroup.lookAt(targetPosition);
+                    model_drone.position.y = 5;
+                })
+                .onUpdate(() => {
+                    locationOfUAV.value = coordinates.slice(0, 2);
+                    g3_3.value = "等待整体决策中";
+                    g3_4.value = "等待整体决策中";
+                    if (type != -1) {
+                        getGroup1Video(type)
+                    }
+
+                })
+                .onComplete(() => {
+                    if (i === group3_detection_steps.go_steps.length - 1) {
+                        g3_3.value = 0.99
+                        g3_4.value = "?"
+                    }
+                });
+
+
+            if (previousTween) {
+                // tween.delay(distance * 50);
+                previousTween.chain(tween);
+            } else {
+                tween.start();
+            }
+            previousTween = tween;
+        }
+
+        // back
+        for (let i = 0; i < group3_detection_steps.back_steps.length; i++) {
+            const coordinates: number[] = group3_detection_steps.back_steps[i];
             const x: number = coordinates[0];
             const y: number = coordinates[1];
             const z: number = 0;
@@ -361,21 +348,10 @@ function moveModel() {
                     model_drone.position.y = 5;
                 })
                 .onUpdate(() => {
-                    locationOfUAV.value = coordinates;
-                    g2_1.value = "等待打击结束";
-                    g2_2.value = "等待打击结束";
-                    g3_3.value = "等待整体决策中";
-                    g3_4.value = "等待整体决策中";
+                    locationOfUAV.value = coordinates.slice(0, 2);
                 })
                 .onComplete(() => {
-                    if (i === group3_steps.all_steps.length - 1) {
-                        g3_3.value = 0.99
-                        g3_4.value = "?"
-                        setTimeout(() => {
-                            g2_1.value = 0.96;
-                            g2_2.value = "10ms";
-                        }, 10000);
-                    }
+
                 });
 
 
@@ -390,28 +366,25 @@ function moveModel() {
     }
 }
 
-// //纯three.js
-// function moveModel() {
-//     console.log("开始移动模型")
-//     if (group3_steps) {
-//         // 使用从服务器获取的坐标逐一移动模型
-//         for (let i = 0; i < group3_steps.all_steps.length; i++) {
-//             const coordinates = group3_steps.all_steps[i];
-//             const x = coordinates[0];
-//             const y = coordinates[1];
-//             const z = 5;
+async function getGroup1Video(type: number): Promise<any> {
+    try {
+        const response = await axios.get(`http://localhost:8080/home/group1/getvideo?type=${type}`, {
+            responseType: 'blob'
+        });
+        const videoBlob = response.data;
+        const videoUrl = URL.createObjectURL(videoBlob);
+        const videoPlayer = document.getElementById('videoPlayer') as HTMLVideoElement;
+        videoPlayer.src = videoUrl;
+        videoPlayer.style.aspectRatio = '1880 / 1070';
+        videoPlayer.loop = true;
+        videoPlayer.play();
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        throw new Error('Failed to fetch video');
+    }
+}
 
-//             // 这里你需要使用某种移动方式来连续到达每个坐标
-//             // 例如，你可以使用Tween.js或者自己的动画函数来实现连续移动
-//             // 以下是一个简单的例子，你可以根据需要修改
-//             setTimeout(() => {
-//                 model_drone.lookAt(x, z, y);
-//                 model_drone.position.set(x, z, y);
-//                 controls.target = new THREE.Vector3(x, z, y)
-//             }, i * 100); // 假设每秒移动一次，你可以根据需要调整时间间隔
-//         }
-//     }
-// }
 
 
 //半球光

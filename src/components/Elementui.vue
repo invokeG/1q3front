@@ -10,9 +10,10 @@
                             </el-icon>Navigator One
                         </template>
                         <el-menu-item-group>
-                            <template #title>Group 1</template>
-                            <el-menu-item index="1-1" @click="() => handleMenuItemClick('1-1')">Option 1</el-menu-item>
-                            <el-menu-item index="1-2" @click="() => handleMenuItemClick('1-2')">Option 2</el-menu-item>
+                            <template #title>标题位置</template>
+                            <el-menu-item index="1-0" @click="() => handleMenuItemClick('1-0')">无人机侦查阶段</el-menu-item>
+                            <el-menu-item index="1-1" @click="() => handleMenuItemClick('1-1')">无人机寻路与打击阶段</el-menu-item>
+                            <el-menu-item index="1-2" @click="() => handleMenuItemClick('1-2')">getEnv</el-menu-item>
                         </el-menu-item-group>
                         <el-menu-item-group title="Group 2">
                             <el-menu-item index="1-3">Option 3</el-menu-item>
@@ -95,7 +96,8 @@
 <script setup lang="ts">
 import threePage from "./ThreePage.vue"
 import getEnvPage from "./GetEnv.vue"
-import HelloPage from "./HelloPage.vue"
+import helloPage from "./HelloPage.vue"
+import detectionPage from "./DetectionPage.vue"
 import { Menu as IconMenu, Message, Setting } from '@element-plus/icons-vue'
 // import { Menu, Message, Setting } from '@element-plus/icons-vue'
 import { ref, onMounted } from "vue";
@@ -107,6 +109,9 @@ const currentComponent = ref<ReturnType<typeof defineProps> | null>(null);
 const handleMenuItemClick = (index: string) => {
   // Update the currentComponent based on the clicked menu item
   switch (index) {
+    case "1-0":
+      currentComponent.value = detectionPage;
+      break;
     case "1-1":
       currentComponent.value = threePage;
       break;
@@ -114,7 +119,7 @@ const handleMenuItemClick = (index: string) => {
       currentComponent.value = getEnvPage;
       break;
     default:
-      currentComponent.value = HelloPage;
+      currentComponent.value = helloPage;
   }
 };
 
@@ -123,7 +128,7 @@ function userLogout() {
 }
 
 onMounted(() => {
-  currentComponent.value = HelloPage;
+  currentComponent.value = helloPage;
 });
 
 </script>
