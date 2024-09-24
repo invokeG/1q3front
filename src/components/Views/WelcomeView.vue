@@ -1,6 +1,6 @@
 !<template>
     <div style="width: 100vw; height: 100vh; display: flex; overflow:hidden">
-        <div style="flex: 1; background-color: #000000;">
+        <div style="flex: 1; background-color: #ffffff;">
             <el-image style="width: 100%; height: 100%;" fit="cover" 
             src="images/bg1.jpg"></el-image>
         </div>

@@ -12,7 +12,7 @@
                     <div class="text item">单步决策成功率: 0.99</div>
                     <div class="text item">单步决策时间: 9ms</div>
                     <div class="text item">整体决策成功率: {{ g3_3 }}</div>
-                    <div class="text item">五倍加速: {{ g3_4 }}</div>
+                    <!-- <div class="text item">五倍加速: {{ g3_4 }}</div> -->
                     <!-- <div v-for="o in 4" :key="o" class="text item">{{ '数据 ' + o }}</div> -->
                     <template #footer>Footer content</template>
                 </el-card>
@@ -70,7 +70,7 @@ let locationOfUAV = ref();
 // let isDetectionDone = ref(false);
 // const isHitDone = ref(false)
 let g3_3 = ref<number | null | string>(null);
-let g3_4 = ref<string>("N/A");
+// let g3_4 = ref<string>("N/A");
 
 
 
@@ -307,7 +307,7 @@ function moveModel() {
                 .onUpdate(() => {
                     locationOfUAV.value = coordinates.slice(0, 2);
                     g3_3.value = "等待整体决策中";
-                    g3_4.value = "等待整体决策中";
+                    // g3_4.value = "等待整体决策中";
                     if (type != -1) {
                         getGroup1Video(type)
                     }
@@ -316,7 +316,7 @@ function moveModel() {
                 .onComplete(() => {
                     if (i === group3_detection_steps.go_steps.length - 1) {
                         g3_3.value = 0.99
-                        g3_4.value = "?"
+                        // g3_4.value = "?"
                     }
                 });
 

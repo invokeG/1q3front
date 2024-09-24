@@ -73,7 +73,7 @@
 
         <el-container>
             <el-header style="text-align: right; font-size: 12px">
-                <div class="toolbar">
+                <!-- <div class="toolbar">
                     <el-dropdown>
                         <el-icon style="margin-right: 8px; margin-top: 1px">
                             <Setting />
@@ -87,7 +87,7 @@
                         </template>
                     </el-dropdown>
                     <span>User</span>
-                </div>
+                </div> -->
             </el-header>
             <el-main>
                 <div class="center-container">
@@ -107,8 +107,8 @@ import detectionPage from "./DetectionPage.vue"
 // import { Menu as IconMenu, Position, Setting } from '@element-plus/icons-vue'
 // import { Menu, Message, Setting } from '@element-plus/icons-vue'
 import { ref, onMounted } from "vue";
-import { logout } from "@/net";
-import router from "@/router";
+// import { logout } from "@/net";
+// import router from "@/router";
 
 const currentComponent = ref<ReturnType<typeof defineProps> | null>(null);
 
@@ -129,9 +129,9 @@ const handleMenuItemClick = (index: string) => {
     }
 };
 
-function userLogout() {
-    logout(() => router.push("/"))
-}
+// function userLogout() {
+//     logout(() => router.push("/"))
+// }
 
 onMounted(() => {
     currentComponent.value = helloPage;
