@@ -178,7 +178,18 @@ function checkConditionsAndProceed() {
         sightOfUAV.position.y = 0;
         sightOfUAV.rotation.x = -Math.PI / 2;
 
-        droneGroup.add(model_drone);
+        // droneGroup.add(model_drone);
+        for (let i = 0; i < 3; i++) {
+            const droneClone = model_drone.clone();
+            const offsetX = i - 1; // V 字形的 X 方向偏移
+            const offsetY = i === 0 ? 2 : (i === 1 ? 1 : 2); // 设置不同高度
+
+            droneClone.position.set(offsetX, offsetY + 1.5, 0); // 整体上移1.5，设置位置
+
+            // 添加到组中
+            droneGroup.add(droneClone);
+        }
+
         droneGroup.add(posOfUAV);
         droneGroup.add(sightOfUAV);
         droneGroup.position.set(group3_env.start_pos[0], 0, group3_env.start_pos[1]);
@@ -190,6 +201,7 @@ function checkConditionsAndProceed() {
         setTimeout(checkConditionsAndProceed, 100); // 每 100 毫秒检查一次
     }
 }
+
 
 gltfLoader.load(
     //模型路径
