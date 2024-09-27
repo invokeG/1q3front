@@ -6,12 +6,12 @@
                 <el-card class="box-card">
                     <template #header>
                         <div class="card-header">
-                            <span>无人机路径决策指标</span>
+                            <span style="font-size: 12px; font-weight: bold;">无人机路径决策指标</span>
                         </div>
                     </template>
-                    <div class="text item">单步决策成功率: 0.99</div>
-                    <div class="text item">单步决策时间: 9ms</div>
-                    <div class="text item">整体决策成功率: {{ g3_3 }}</div>
+                    <div class="text item" style="font-size: 12px;">单步决策成功率: 0.99</div>
+                    <div class="text item" style="font-size: 12px;">单步决策时间: 9ms</div>
+                    <div class="text item" style="font-size: 12px;">整体决策成功率: {{ g3_3 }}</div>
                     <!-- <div class="text item">五倍加速: {{ g3_4 }}</div> -->
                     <!-- <div v-for="o in 4" :key="o" class="text item">{{ '数据 ' + o }}</div> -->
                     <template #footer>Footer content</template>
@@ -21,10 +21,10 @@
                 <el-card class="box-card">
                     <template #header>
                         <div class="card-header">
-                            <span>UAV实时坐标</span>
+                            <span style="font-size: 12px; font-weight: bold;">无人机实时坐标(km)</span>
                         </div>
                     </template>
-                    <div class="text item">{{ locationOfUAV }}</div>
+                    <div class="text item" style="font-size: 12px;">{{ locationOfUAV }}</div>
                     <template #footer>Footer content</template>
                 </el-card>
             </div>
