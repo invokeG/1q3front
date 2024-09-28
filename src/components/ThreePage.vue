@@ -291,14 +291,14 @@ function moveModel(droneGroup: THREE.Group, index: number) {
             const x = coordinates[0];
             const y = coordinates[1];
             const z = 0;
-            let speedFactor = 30;
+            let speedFactor = 10;
 
             if (coordinates[2] == -1) {
-                speedFactor = 30;
+                speedFactor = 10;
             } else if (coordinates[2] == -2) {
-                speedFactor = 10;
+                speedFactor = 15;
             } else {
-                speedFactor = 10;
+                speedFactor = 7;
             }
 
             const targetPosition = new THREE.Vector3(x, z, y);
