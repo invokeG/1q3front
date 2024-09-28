@@ -68,6 +68,8 @@ let model_drone: THREE.Scene;
 let explosionModel: THREE.Scene;
 const targetsModels: { position: THREE.Vector2; model: THREE.Object3D }[] = [];
 let baseTargetModel: THREE.Object3D | null = null;
+// 新增：跟踪每个无人机是否完成运动
+const droneCompleted = ref<boolean[]>(Array(5).fill(false));
 
 
 // let posOfUAV: THREE.Mesh;
@@ -134,12 +136,12 @@ const camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(
 );
 
 //相机位置，z轴为朝向自己的方向，y轴为垂直方向
-camera.position.set(25, 20, 25);
+camera.position.set(-5, 10, -5);
 // 设置相机朝向的位置
-// camera.lookAt(100, 0, 100)
+// camera.lookAt(0, 0, 0)
 
 const controls: OrbitControls = new OrbitControls(camera, renderer.domElement);
-controls.target = new THREE.Vector3(100, 0, 100);
+controls.target = new THREE.Vector3(25, 0, 25);
 
 setTimeout(() => {
     if (isEvnDone) {
@@ -369,6 +371,12 @@ function moveModel(droneGroup: THREE.Group, index: number) {
                 })
                 .onComplete(() => {
                     if (i === steps.length - 1) {
+                        // 标记该无人机为完成
+                        droneCompleted.value[index] = true;
+
+                        // 触发摄像机跳转
+                        focusOnNextDrone();
+
                         // 完成后的处理
                         g3_3.value = 0.99
                         // g3_4.value = "?"
@@ -388,6 +396,71 @@ function moveModel(droneGroup: THREE.Group, index: number) {
         }
     }
 }
+
+function focusOnNextDrone() {
+    // 查找第一个未完成的无人机
+    const nextDroneIndex = droneCompleted.value.findIndex(completed => !completed);
+
+    if (nextDroneIndex !== -1) {
+        const nextDroneGroup = droneGroups[nextDroneIndex].group;
+        const targetPosition = new THREE.Vector3().copy(nextDroneGroup.position);
+
+        // 计算摄像机新的位置（例如，从当前摄像机位置向目标位置移动一定距离）
+        const direction = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
+        const newCameraPosition = new THREE.Vector3().copy(targetPosition).add(direction.multiplyScalar(20)); // 20为距离因子，可根据需要调整
+
+        // 使用 TWEEN 平滑过渡摄像机位置和控制器目标
+        new TWEEN.Tween(camera.position)
+            .to({
+                x: newCameraPosition.x,
+                y: newCameraPosition.y,
+                z: newCameraPosition.z
+            }, 2000) // 过渡时间为2秒
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .start();
+
+        // 创建一个临时 Vector3 来存储目标位置的变化
+        const newTarget = {
+            x: controls.target.x,
+            y: controls.target.y,
+            z: controls.target.z
+        };
+
+        // 更新新目标的坐标
+        newTarget.x = targetPosition.x;
+        newTarget.y = targetPosition.y;
+        newTarget.z = targetPosition.z;
+
+        // 使用 TWEEN 平滑过渡控制器的目标
+        new TWEEN.Tween(newTarget)
+            .to({
+                x: targetPosition.x,
+                y: targetPosition.y,
+                z: targetPosition.z
+            }, 2000) // 过渡时间与摄像机位置一致
+            .easing(TWEEN.Easing.Cubic.InOut)
+            .onUpdate(() => {
+                controls.target.set(newTarget.x, newTarget.y, newTarget.z);
+                controls.target.set(25, 10, 25);
+            })
+            .start();
+        
+        // new TWEEN.Tween(newTarget)
+        //     .to({
+        //         x: 25,
+        //         y: 5,
+        //         z: 25
+        //     }, 2000) // 过渡时间与摄像机位置一致
+        //     .easing(TWEEN.Easing.Cubic.InOut)
+        //     .onUpdate(() => {
+        //         controls.target.set(25, 5, 25);
+        //     })
+        //     .start();
+    } else {
+        console.log("所有无人机的运动已完成。");
+    }
+}
+
 
 // 示例函数，模拟更新 UAV 坐标
 function updateUAVLocation(index, coordinates) {
@@ -642,54 +715,6 @@ async function loadAllModels() {
     }
 }
 
-
-// async function loadAllModels() {
-//     if (!isEvnDone) {
-//         // 如果请求尚未完成，则等待0.5秒
-//         await new Promise((resolve) => setTimeout(resolve, 500));
-//         await loadAllModels(); // 递归调用，直到isRequestDone为true
-//     } else {
-//         const allObstacles: number[][] = group3_env.all_obstacles;
-//         const targets: number[][] = group3_env.targets;
-
-//         allObstacles.forEach((obstacle: any[]) => {
-//             const x: number = obstacle[0];
-//             const y: number = obstacle[1];
-//             const type: number = obstacle[2];
-
-//             if (type === 0) { // Car
-//                 // let scale: number[] = [0.0005, 0.0005, 0.0005]; //for tank
-//                 let scale: number[] = [0.0005, 0.0005, 0.0005];
-//                 let position: number[] = [x, 0, y];
-//                 loadModel("./models/Car/truck.glb", scale, position);
-//             } else if (type === 1) { //Ship
-//                 let scale: number[] = [0.05, 0.05, 0.05];
-//                 let position: number[] = [x, 0.1, y];
-//                 loadModel("./models/Ship/low-poly_warship.glb", scale, position);
-//             } else if (type === 2) { //People
-//                 let scale: number[] = [0.001, 0.001, 0.001];
-//                 let position: number[] = [x, 0, y];
-//                 loadModel("./models/People/three_soldier.glb", scale, position);
-//             }
-//         });
-
-//         for (const target of targets) {
-//             const x: number = target[0];
-//             const y: number = target[1];
-
-//             let scale: number[] = [0.05, 0.05, 0.05];
-//             let position: number[] = [x, 0, y];
-
-//             const targetModel = await loadModel("./models/Target/balloon_target.glb", scale, position);
-
-//             targetsModels.push({
-//                 position: new THREE.Vector2(x, y),
-//                 model: targetModel,
-//             });
-//         }
-//     }
-// }
-
 loadAllModels();
 
 //半球光
@@ -721,12 +746,12 @@ watch(() => group3_env, () => {
 
 // 渲染函数
 function animate() {
-    // 更新所有无人机组的目标
-    droneGroups.forEach(({ group }) => {
-        if (model_drone) {
-            controls.target = group.position; // 更新控制器的目标为当前无人机组
-        }
-    });
+    // // 更新所有无人机组的目标
+    // droneGroups.forEach(({ group }) => {
+    //     if (model_drone) {
+    //         controls.target = group.position; // 更新控制器的目标为当前无人机组
+    //     }
+    // });
 
     controls.update();
     // 调用 animate
