@@ -10,7 +10,7 @@
                             </el-icon>无人机群智能计算演示系统
                         </template>
                         <el-menu-item-group>
-                            <template #title>轻量化智能决策</template>
+                            <!-- <template #title>轻量化智能决策</template> -->
                             <el-menu-item index="1-0" @click="() => handleMenuItemClick('1-0')">
                                 <el-icon>
                                     <Position />
