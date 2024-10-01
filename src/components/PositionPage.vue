@@ -6,28 +6,16 @@
                 <el-card class="box-card">
                     <template #header>
                         <div class="card-header">
-                            <span style="font-size: 12px; font-weight: bold;">无人机路径决策指标</span>
+                            <span style="font-size: 12px; font-weight: bold;">已分配的目标点</span>
                         </div>
                     </template>
-                    <div class="text item" style="font-size: 12px;">单步决策成功率: 0.99</div>
-                    <div class="text item" style="font-size: 12px;">单步决策时间: 9ms</div>
-                    <div class="text item" style="font-size: 12px;">整体决策成功率: {{ g3_3 }}</div>
-                    <template #footer>Footer content</template>
-                </el-card>
-            </div>
-            <div>
-                <el-card class="box-card">
-                    <template #header>
-                        <div class="card-header">
-                            <span style="font-size: 12px; font-weight: bold;">无人机实时坐标(km)</span>
+                    <div v-if="assignedTargets.length > 0">
+                        <div v-for="(target, index) in assignedTargets" :key="index" style="font-size: 12px;">
+                            目标点 {{ index + 1 }}: ({{ target[0] }}, {{ target[1] }})
                         </div>
-                    </template>
-                    <div class="text item" style="font-size: 12px;">{{ locationOfUAV }}</div>
-                    <template #footer>Footer content</template>
+                    </div>
+                    <div v-else style="font-size: 12px;">没有目标点分配</div>
                 </el-card>
-            </div>
-            <div style="width: 20%; position: relative;">
-                <video id="videoPlayer" controls style="width: 100%; height: auto;"></video>
             </div>
         </div>
     </div>
@@ -61,9 +49,7 @@ let isStepDone: boolean = false;
 let model_drone: THREE.Scene;
 let posOfUAV: THREE.Mesh;
 let sightOfUAV: THREE.Mesh;
-
-let locationOfUAV = ref<number[] | null | string>("[0, 0]");
-let g3_3 = ref<number | null | string>("等待整体决策中");
+let assignedTargets = ref<number[][]>([]);
 
 // 存储箭头模型的数组
 const arrowModels: { position: THREE.Vector3; model: THREE.Group }[] = [];
@@ -299,9 +285,7 @@ function checkConditionsAndProceed() {
         scene.add(droneGroup);
 
         // 创建“任务分配中”精灵并添加到无人机上方
-        updateSprite("无人机就绪");
-
-
+        updateSprite("任务分配中");
 
         // 等待5秒后更改精灵内容并开始移动
         setTimeout(() => {
@@ -309,15 +293,26 @@ function checkConditionsAndProceed() {
                 arrowObj.model.visible = true;
             });
 
-        }, 500); // 5000毫秒 = 5秒
+            arrowModels.forEach((arrowObj) => {
+                const x = arrowObj.position.x;
+                const z = arrowObj.position.z;
 
-        setTimeout(() => {
-            updateSprite("正在侦查&态势识别");
+                // 检查是否该坐标已经存在
+                const exists = assignedTargets.value.some(
+                    (target) => target[0] === x && target[1] === z
+                );
+
+                // 如果坐标不存在，则添加到 assignedTargets
+                if (!exists) {
+                    assignedTargets.value.push([x, z]);
+                }
+            });
+
+            updateSprite("目标点已分配完毕");
+
             // 开始移动模型
-            moveModel();
-
-        }, 4000);
-
+            // moveModel();
+        }, 3000); // 5000毫秒 = 5秒
     } else {
         // 如果条件不满足，等待一段时间后再次检查
         setTimeout(checkConditionsAndProceed, 100); // 每 100 毫秒检查一次
@@ -449,54 +444,6 @@ async function loadAllModels() {
 
 loadAllModels();
 
-// UAV移动模型函数Tween
-function moveModel() {
-    console.log("开始移动模型");
-    if (group3_detection_steps) {
-        let previousTween: TWEEN.Tween<THREE.Vector3> = null;
-
-        for (let i = 0; i < group3_detection_steps.go_steps.length; i++) {
-            const coordinates: number[] = group3_detection_steps.go_steps[i];
-            const x: number = coordinates[0];
-            const y: number = coordinates[1];
-            const z: number = 0;
-            const type: number = coordinates[2];
-
-            const targetPosition: THREE.Vector3 = new THREE.Vector3(x, z, y);
-            let distance: number = droneGroup.position.distanceTo(targetPosition);
-
-            const tween: TWEEN.Tween<THREE.Vector3> = new TWEEN.Tween(droneGroup.position)
-                .to(targetPosition, distance * 1)
-                .easing(TWEEN.Easing.Quadratic.InOut)
-                .onStart(() => {
-                    droneGroup.lookAt(targetPosition);
-                    model_drone.position.y = 5;
-                })
-                .onUpdate(() => {
-                    locationOfUAV.value = coordinates.slice(0, 2);
-                    g3_3.value = "等待整体决策中";
-                    if (type != -1) {
-                        getGroup1Video(type);
-                    }
-                })
-                .onComplete(() => {
-                    if (i === group3_detection_steps.go_steps.length - 1) {
-                        g3_3.value = 0.99;
-
-                        // 更新精灵内容为“侦查结束”
-                        updateSprite("侦查结束");
-                    }
-                });
-
-            if (previousTween) {
-                previousTween.chain(tween);
-            } else {
-                tween.start();
-            }
-            previousTween = tween;
-        }
-    }
-}
 
 // 更新可见性函数
 function updateVisibility() {
@@ -541,26 +488,6 @@ function updateVisibility() {
 }
 
 
-// 获取并播放视频
-async function getGroup1Video(type: number): Promise<any> {
-    try {
-        // const response = await axios.get(`http://101.43.140.164:7310/home/group1/getvideo?type=${type}`, {
-        const response = await axios.get(`http://localhost:8080/home/group1/getvideo?type=${type}`, {
-            responseType: 'blob'
-        });
-        const videoBlob = response.data;
-        const videoUrl = URL.createObjectURL(videoBlob);
-        const videoPlayer = document.getElementById('videoPlayer') as HTMLVideoElement;
-        videoPlayer.src = videoUrl;
-        videoPlayer.style.aspectRatio = '1880 / 1070';
-        videoPlayer.loop = true;
-        videoPlayer.play();
-        return response.data;
-    } catch (error) {
-        console.error(error);
-        throw new Error('Failed to fetch video');
-    }
-}
 
 // 半球光
 const hemiLight: THREE.HemisphereLight = new THREE.HemisphereLight(0xffffff, 0x444444);

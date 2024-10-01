@@ -1,5 +1,5 @@
 <template>
-    <el-container class="layout-container-demo" style=" height: 100vh">
+    <el-container class="layout-container-demo" style="height: 100vh">
         <el-aside width="250px">
             <el-scrollbar>
                 <el-menu :default-openeds="['1', '3']">
@@ -10,88 +10,43 @@
                             </el-icon>无人机群智能计算演示系统
                         </template>
                         <el-menu-item-group>
-                            <!-- <template #title>轻量化智能决策</template> -->
+                            <el-menu-item index="1-2" @click="() => handleMenuItemClick('1-2')">
+                                <el-icon>
+                                    <MapLocation />
+                                </el-icon>无人机任务分配
+                            </el-menu-item>
                             <el-menu-item index="1-0" @click="() => handleMenuItemClick('1-0')">
                                 <el-icon>
-                                    <Position />
-                                </el-icon>无人机侦查阶段</el-menu-item>
+                                    <Search />
+                                </el-icon>无人机侦查阶段
+                            </el-menu-item>
+                            <el-menu-item index="1-3" @click="() => handleMenuItemClick('1-3')">
+                                <el-icon>
+                                    <Check />
+                                </el-icon>侦查结果
+                            </el-menu-item>
                             <el-menu-item index="1-1" @click="() => handleMenuItemClick('1-1')">
                                 <el-icon>
-                                    <Place />
-                                </el-icon>无人机打击阶段</el-menu-item>
-                            <!-- <el-menu-item index="1-2" @click="() => handleMenuItemClick('1-2')">getEnv</el-menu-item> -->
+                                    <Position />
+                                </el-icon>无人机打击阶段
+                            </el-menu-item>
+                            <el-menu-item index="1-4" @click="() => handleMenuItemClick('1-4')">
+                                <el-icon>
+                                    <Flag />
+                                </el-icon>打击结果
+                            </el-menu-item>
                         </el-menu-item-group>
-                        <!-- <el-menu-item-group title="Group 2">
-                            <el-menu-item index="1-3">Option 3</el-menu-item>
-                        </el-menu-item-group>
-                        <el-sub-menu index="1-4">
-                            <template #title>Option4</template>
-                            <el-menu-item index="1-4-1">Option 4-1</el-menu-item>
-                        </el-sub-menu> -->
                     </el-sub-menu>
-                    <!-- <el-sub-menu index="2">
-                        <template #title>
-                            <el-icon>
-                                <icon-menu />
-                            </el-icon>Navigator Two
-                        </template>
-                        <el-menu-item-group>
-                            <template #title>Group 1</template>
-                            <el-menu-item index="2-1">Option 1</el-menu-item>
-                            <el-menu-item index="2-2">Option 2</el-menu-item>
-                        </el-menu-item-group>
-                        <el-menu-item-group title="Group 2">
-                            <el-menu-item index="2-3">Option 3</el-menu-item>
-                        </el-menu-item-group>
-                        <el-sub-menu index="2-4">
-                            <template #title>Option 4</template>
-                            <el-menu-item index="2-4-1">Option 4-1</el-menu-item>
-                        </el-sub-menu>
-                    </el-sub-menu>
-                    <el-sub-menu index="3">
-                        <template #title>
-                            <el-icon>
-                                <setting />
-                            </el-icon>Navigator Three
-                        </template>
-                        <el-menu-item-group>
-                            <template #title>Group 1</template>
-                            <el-menu-item index="3-1">Option 1</el-menu-item>
-                            <el-menu-item index="3-2">Option 2</el-menu-item>
-                        </el-menu-item-group>
-                        <el-menu-item-group title="Group 2">
-                            <el-menu-item index="3-3">Option 3</el-menu-item>
-                        </el-menu-item-group>
-                        <el-sub-menu index="3-4">
-                            <template #title>Option 4</template>
-                            <el-menu-item index="3-4-1">Option 4-1</el-menu-item>
-                        </el-sub-menu>
-                    </el-sub-menu> -->
                 </el-menu>
             </el-scrollbar>
         </el-aside>
 
         <el-container>
             <el-header style="text-align: right; font-size: 12px">
-                <!-- <div class="toolbar">
-                    <el-dropdown>
-                        <el-icon style="margin-right: 8px; margin-top: 1px">
-                            <Setting />
-                        </el-icon>
-                        <template #dropdown>
-                            <el-dropdown-menu>
-                                <el-dropdown-item>View</el-dropdown-item>
-                                <el-dropdown-item>Add</el-dropdown-item>
-                                <el-dropdown-item @click="userLogout">Logout</el-dropdown-item>
-                            </el-dropdown-menu>
-                        </template>
-                    </el-dropdown>
-                    <span>User</span>
-                </div> -->
+                <h1 class="welcome-title">{{ headerTitle }}</h1>
             </el-header>
             <el-main>
                 <div class="center-container">
-                    <!-- <Threedemo class="three"></Threedemo> -->
                     <component :is="currentComponent"></component>
                 </div>
             </el-main>
@@ -104,34 +59,46 @@ import threePage from "./ThreePage.vue"
 import getEnvPage from "./GetEnv.vue"
 import helloPage from "./HelloPage.vue"
 import detectionPage from "./DetectionPage.vue"
-// import { Menu as IconMenu, Position, Setting } from '@element-plus/icons-vue'
-// import { Menu, Message, Setting } from '@element-plus/icons-vue'
+import positionPage from "./PositionPage.vue"
+import resOfDetc from "./ResOfDetc.vue"
+import finalRes from "./FinalRes.vue"
 import { ref, onMounted } from "vue";
-// import { logout } from "@/net";
-// import router from "@/router";
 
 const currentComponent = ref<ReturnType<typeof defineProps> | null>(null);
+const headerTitle = ref("虚实演示系统");  // 新增的标题变量
 
 const handleMenuItemClick = (index: string) => {
-    // Update the currentComponent based on the clicked menu item
+    // Update the currentComponent and headerTitle based on the clicked menu item
     switch (index) {
         case "1-0":
             currentComponent.value = detectionPage;
+            headerTitle.value = "侦查阶段展示";  // 更新标题
             break;
         case "1-1":
             currentComponent.value = threePage;
+            headerTitle.value = "打击阶段展示";  // 更新标题
             break;
         case "1-2":
+            currentComponent.value = positionPage;
+            headerTitle.value = "目标点分配";  // 更新标题
+            break;
+        case "1-3":
+            currentComponent.value = resOfDetc;
+            headerTitle.value = "侦查结果展示";  // 更新标题
+            break;
+        case "1-4":
+            currentComponent.value = finalRes;
+            headerTitle.value = "打击结果展示";  // 更新标题
+            break;
+        case "1-999":
             currentComponent.value = getEnvPage;
+            headerTitle.value = "环境获取展示";  // 更新标题
             break;
         default:
             currentComponent.value = helloPage;
+            headerTitle.value = "虚实演示系统";  // 默认标题
     }
 };
-
-// function userLogout() {
-//     logout(() => router.push("/"))
-// }
 
 onMounted(() => {
     currentComponent.value = helloPage;
@@ -157,7 +124,6 @@ onMounted(() => {
 
 .layout-container-demo .el-main {
     padding: 0;
-    /* display: flex; */
     flex-direction: row;
     align-items: flex-start;
     flex: 1;
@@ -175,5 +141,12 @@ onMounted(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.welcome-title {
+    font-size: 1.25rem;
+    color: #555555;
+    text-align: center;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 </style>

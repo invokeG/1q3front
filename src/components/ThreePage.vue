@@ -27,7 +27,7 @@
                     <template #footer>Footer content</template>
                 </el-card>
             </div>
-            <div>
+            <!-- <div>
                 <el-card class="box-card" v-for="(uav, index) in locationOfUAVs" :key="index">
                     <template #header>
                         <div class="card-header">
@@ -35,6 +35,19 @@
                         </div>
                     </template>
                     <div class="text item" style="font-size: 12px;">[{{ uav.value.join(', ') }}]</div>
+                    <template #footer>Footer content</template>
+                </el-card>
+            </div> -->
+            <div>
+                <el-card class="box-card">
+                    <template #header>
+                        <div class="card-header">
+                            <span style="font-size: 12px; font-weight: bold;">无人机实时坐标(km)</span>
+                        </div>
+                    </template>
+                    <div v-for="(uav, index) in locationOfUAVs" :key="index" class="text item" style="font-size: 12px;">
+                        无人机群{{ index + 1 }}: [{{ uav.value.join(', ') }}]
+                    </div>
                     <template #footer>Footer content</template>
                 </el-card>
             </div>
@@ -76,12 +89,12 @@ const droneCompleted = ref<boolean[]>(Array(5).fill(false));
 // let sightOfUAV: THREE.Mesh;
 
 // let locationOfUAV = ref();
-let locationOfUAVs = ref(Array(5).fill(null).map(() => ({ value: [] })));
+let locationOfUAVs = ref(Array(10).fill(null).map(() => ({ value: [0,0] })));
 // let isDetectionDone = ref(false);
 // const isHitDone = ref(false)
-let g2_1 = ref<number | null | string>(null);
-let g2_2 = ref<string>("N/A");
-let g3_3 = ref<number | null | string>(null);
+let g2_1 = ref<number | null | string>("等待打击结束");
+let g2_2 = ref<string>("等待打击结束");
+let g3_3 = ref<number | null | string>("等待整体决策中");
 // let g3_4 = ref<string>("N/A");
 
 
@@ -101,8 +114,8 @@ onMounted(() => {
     console.log(document.getElementById("three").clientWidth + "////" + document.getElementById("three").clientHeight);
 
     // 二组战场环境
-    // axios.get("http://192.168.31.216:8081/home/group3/getEnv")
-    axios.get("http://localhost:8080/home/group3/getEnv")
+    axios.get("http://101.43.140.164:7310/home/group3/getEnv")
+    // axios.get("http://localhost:8080/home/group3/getEnv")
         .then(function (response) {
             group3_env = response.data;
             isEvnDone = true;
@@ -112,8 +125,8 @@ onMounted(() => {
         });
 
     // 二组打击寻路
-    // axios.get("http://192.168.31.216:8081/home/group3/getAllSteps")
-    axios.get("http://localhost:8080/home/group3/getAllSteps")
+    axios.get("http://101.43.140.164:7310/home/group3/getAllSteps")
+    // axios.get("http://localhost:8080/home/group3/getAllSteps")
         .then(function (response) {
             group3_steps = response.data;
             isStepDone = true;
@@ -174,7 +187,7 @@ const droneGroups: {
     label: THREE.Sprite,
     explosionShown: boolean
 }[] = [];
-const numDrones = 5; // 需要创建的无人机组数量
+const numDrones = 10; // 需要创建的无人机组数量
 
 // 在加载模型时进行初始化
 gltfLoader.load(
@@ -198,7 +211,7 @@ gltfLoader.load(
             const sightOfUAV = new THREE.Mesh(planeGeometry, planeMaterial);
 
             // 添加文本精灵
-            const label = createTextSprite("20架", {
+            const label = createTextSprite("正在加载", {
                 fontSize: 32,
                 fontFace: 'Arial',
                 borderThickness: 2,
@@ -257,7 +270,7 @@ function checkConditionsAndProceed(droneGroup: THREE.Group, index: number, posOf
         droneGroup.add(sightOfUAV);
 
         // 添加文本精灵
-        const label = createTextSprite("20架", {
+        const label = createTextSprite("正在加载", {
             fontSize: 48,
             fontFace: 'Arial',
             borderThickness: 2,
@@ -272,7 +285,13 @@ function checkConditionsAndProceed(droneGroup: THREE.Group, index: number, posOf
         // 存储 label 到 droneGroups
         droneGroups[index].label = label;
 
-        moveModel(droneGroup, index); // 使用不同的路径
+        setTimeout(() => {
+            updateLabelText(droneGroups[index].label, "正在加载");
+            // 开始移动模型
+            moveModel(droneGroup, index);
+        }, 3000); // 5000毫秒 = 5秒
+
+        // moveModel(droneGroup, index); // 使用不同的路径
     } else {
         // 如果条件不满足，等待一段时间后再次检查
         setTimeout(() => checkConditionsAndProceed(droneGroup, index, posOfUAV, sightOfUAV), 100); // 每 100 毫秒检查一次
@@ -316,7 +335,7 @@ function moveModel(droneGroup: THREE.Group, index: number) {
                     if (coordinates[2] == -1) {
                         // 自动导航状态
                         updateUAVLocation(index, coordinates.slice(0, 2));
-                        updateLabelText(droneGroups[index].label, "自动导航中(20架)");
+                        updateLabelText(droneGroups[index].label, "自动导航中(10架)");
 
                         // 显示 UAV 可见区域
                         droneGroups[index].sightOfUAV.visible = true;
@@ -325,11 +344,11 @@ function moveModel(droneGroup: THREE.Group, index: number) {
                         droneGroups[index].explosionShown = false;
                     } else if (coordinates[2] == -2) {
                         updateUAVLocation(index, coordinates.slice(0, 2));
-                        updateLabelText(droneGroups[index].label, "返航(20架)");
+                        updateLabelText(droneGroups[index].label, "返航(10架)");
                     } else {
                         // 正在打击目标点
                         updateUAVLocation(index, coordinates.slice(0, 3));
-                        updateLabelText(droneGroups[index].label, "打击决策中(20架)");
+                        updateLabelText(droneGroups[index].label, "打击决策中(10架)");
 
                         // 隐藏 UAV 可见区域
                         droneGroups[index].sightOfUAV.visible = false;
@@ -375,7 +394,7 @@ function moveModel(droneGroup: THREE.Group, index: number) {
                         droneCompleted.value[index] = true;
 
                         // 触发摄像机跳转
-                        focusOnNextDrone();
+                        // focusOnNextDrone();
 
                         // 完成后的处理
                         g3_3.value = 0.99
@@ -397,69 +416,69 @@ function moveModel(droneGroup: THREE.Group, index: number) {
     }
 }
 
-function focusOnNextDrone() {
-    // 查找第一个未完成的无人机
-    const nextDroneIndex = droneCompleted.value.findIndex(completed => !completed);
+// function focusOnNextDrone() {
+//     // 查找第一个未完成的无人机
+//     const nextDroneIndex = droneCompleted.value.findIndex(completed => !completed);
 
-    if (nextDroneIndex !== -1) {
-        const nextDroneGroup = droneGroups[nextDroneIndex].group;
-        const targetPosition = new THREE.Vector3().copy(nextDroneGroup.position);
+//     if (nextDroneIndex !== -1) {
+//         const nextDroneGroup = droneGroups[nextDroneIndex].group;
+//         const targetPosition = new THREE.Vector3().copy(nextDroneGroup.position);
 
-        // 计算摄像机新的位置（例如，从当前摄像机位置向目标位置移动一定距离）
-        const direction = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
-        const newCameraPosition = new THREE.Vector3().copy(targetPosition).add(direction.multiplyScalar(20)); // 20为距离因子，可根据需要调整
+//         // 计算摄像机新的位置（例如，从当前摄像机位置向目标位置移动一定距离）
+//         const direction = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
+//         const newCameraPosition = new THREE.Vector3().copy(targetPosition).add(direction.multiplyScalar(20)); // 20为距离因子，可根据需要调整
 
-        // 使用 TWEEN 平滑过渡摄像机位置和控制器目标
-        new TWEEN.Tween(camera.position)
-            .to({
-                x: newCameraPosition.x,
-                y: newCameraPosition.y,
-                z: newCameraPosition.z
-            }, 2000) // 过渡时间为2秒
-            .easing(TWEEN.Easing.Cubic.InOut)
-            .start();
+//         // 使用 TWEEN 平滑过渡摄像机位置和控制器目标
+//         new TWEEN.Tween(camera.position)
+//             .to({
+//                 x: newCameraPosition.x,
+//                 y: newCameraPosition.y,
+//                 z: newCameraPosition.z
+//             }, 2000) // 过渡时间为2秒
+//             .easing(TWEEN.Easing.Cubic.InOut)
+//             .start();
 
-        // 创建一个临时 Vector3 来存储目标位置的变化
-        const newTarget = {
-            x: controls.target.x,
-            y: controls.target.y,
-            z: controls.target.z
-        };
+//         // 创建一个临时 Vector3 来存储目标位置的变化
+//         const newTarget = {
+//             x: controls.target.x,
+//             y: controls.target.y,
+//             z: controls.target.z
+//         };
 
-        // 更新新目标的坐标
-        newTarget.x = targetPosition.x;
-        newTarget.y = targetPosition.y;
-        newTarget.z = targetPosition.z;
+//         // 更新新目标的坐标
+//         newTarget.x = targetPosition.x;
+//         newTarget.y = targetPosition.y;
+//         newTarget.z = targetPosition.z;
 
-        // 使用 TWEEN 平滑过渡控制器的目标
-        new TWEEN.Tween(newTarget)
-            .to({
-                x: targetPosition.x,
-                y: targetPosition.y,
-                z: targetPosition.z
-            }, 2000) // 过渡时间与摄像机位置一致
-            .easing(TWEEN.Easing.Cubic.InOut)
-            .onUpdate(() => {
-                controls.target.set(newTarget.x, newTarget.y, newTarget.z);
-                controls.target.set(25, 10, 25);
-            })
-            .start();
+//         // 使用 TWEEN 平滑过渡控制器的目标
+//         new TWEEN.Tween(newTarget)
+//             .to({
+//                 x: targetPosition.x,
+//                 y: targetPosition.y,
+//                 z: targetPosition.z
+//             }, 2000) // 过渡时间与摄像机位置一致
+//             .easing(TWEEN.Easing.Cubic.InOut)
+//             .onUpdate(() => {
+//                 controls.target.set(newTarget.x, newTarget.y, newTarget.z);
+//                 controls.target.set(25, 10, 25);
+//             })
+//             .start();
         
-        // new TWEEN.Tween(newTarget)
-        //     .to({
-        //         x: 25,
-        //         y: 5,
-        //         z: 25
-        //     }, 2000) // 过渡时间与摄像机位置一致
-        //     .easing(TWEEN.Easing.Cubic.InOut)
-        //     .onUpdate(() => {
-        //         controls.target.set(25, 5, 25);
-        //     })
-        //     .start();
-    } else {
-        console.log("所有无人机的运动已完成。");
-    }
-}
+//         // new TWEEN.Tween(newTarget)
+//         //     .to({
+//         //         x: 25,
+//         //         y: 5,
+//         //         z: 25
+//         //     }, 2000) // 过渡时间与摄像机位置一致
+//         //     .easing(TWEEN.Easing.Cubic.InOut)
+//         //     .onUpdate(() => {
+//         //         controls.target.set(25, 5, 25);
+//         //     })
+//         //     .start();
+//     } else {
+//         console.log("所有无人机的运动已完成。");
+//     }
+// }
 
 
 // 示例函数，模拟更新 UAV 坐标
