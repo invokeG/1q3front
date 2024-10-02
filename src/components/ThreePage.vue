@@ -114,8 +114,8 @@ onMounted(() => {
     console.log(document.getElementById("three").clientWidth + "////" + document.getElementById("three").clientHeight);
 
     // 二组战场环境
-    axios.get("http://101.43.140.164:7310/home/group3/getEnv")
-    // axios.get("http://localhost:8080/home/group3/getEnv")
+    // axios.get("http://101.43.140.164:7310/home/group3/getEnv")
+    axios.get("http://localhost:8080/home/group3/getEnv")
         .then(function (response) {
             group3_env = response.data;
             isEvnDone = true;
@@ -125,8 +125,8 @@ onMounted(() => {
         });
 
     // 二组打击寻路
-    axios.get("http://101.43.140.164:7310/home/group3/getAllSteps")
-    // axios.get("http://localhost:8080/home/group3/getAllSteps")
+    // axios.get("http://101.43.140.164:7310/home/group3/getAllSteps")
+    axios.get("http://localhost:8080/home/group3/getAllSteps")
         .then(function (response) {
             group3_steps = response.data;
             isStepDone = true;
@@ -255,7 +255,7 @@ function checkConditionsAndProceed(droneGroup: THREE.Group, index: number, posOf
         }
 
         // 设置 droneGroup 的位置
-        droneGroup.position.set(group3_env.start_pos[0], 1.5, group3_env.start_pos[1]); // 整体上移1.5
+        droneGroup.position.set(group3_env.start_pos[0], 0, group3_env.start_pos[1]); // 整体上移1.5
         scene.add(droneGroup);
 
         // 更新无人机的投影面和可见区域位置
@@ -356,11 +356,14 @@ function moveModel(droneGroup: THREE.Group, index: number) {
                         // 显示爆炸模型（仅在首次进入时显示一次）
                         if (!droneGroups[index].explosionShown && explosionModel && coordinates[3] == -1) {
                             const explosionInstance = explosionModel.clone();
-                            explosionInstance.position.set(coordinates[0], 0, coordinates[1]); // 设置爆炸位置
-                            scene.add(explosionInstance);
+                            // explosionInstance.position.set(coordinates[0], 0, coordinates[1]); // 设置爆炸位置
+                            
 
-                            const targetPosition = new THREE.Vector2(coordinates[0], coordinates[1]);
-                            const targetModelEntry = targetsModels.find((t) => t.position.distanceTo(targetPosition) < 2);
+                            let targetPosition = new THREE.Vector2(coordinates[0], coordinates[1]);
+                            let targetModelEntry = targetsModels.find((t) => t.position.distanceTo(targetPosition) < 5);
+
+                            explosionInstance.position.set(targetModelEntry.position.x, 0, targetModelEntry.position.y); // 使用目标位置作为爆炸位置
+                            scene.add(explosionInstance);
 
                             if (targetModelEntry) {
                                 targetModelEntry.model.visible = false;
@@ -605,7 +608,7 @@ gltfLoader.load(
     (gltf: { scene: any }) => {
         explosionModel = gltf.scene;
 
-        explosionModel.scale.set(0.17, 0.2, 0.17);
+        explosionModel.scale.set(0.2, 0.2, 0.2);
 
         console.log("Explosion model loaded");
     }
