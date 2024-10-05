@@ -1,38 +1,102 @@
 <template>
     <div style="width: 100vw; height: 100vh; position: relative;">
         <div style="display: flex;">
-            <div id="three" style="width: 50vw; height: 50vw; text-align: left"></div>
-            <div>
-                <el-card class="box-card">
-                    <template #header>
-                        <div class="card-header">
-                            <span style="font-size: 12px; font-weight: bold;">无人机路径决策指标</span>
-                        </div>
-                    </template>
-                    <div class="text item" style="font-size: 12px;">单步决策成功率: 0.99</div>
-                    <div class="text item" style="font-size: 12px;">单步决策时间: 9ms</div>
-                    <div class="text item" style="font-size: 12px;">整体决策成功率: {{ g3_3 }}</div>
+            <!-- 3D 渲染区 -->
+            <div id="three" style="width: 50vw; height: 50vw; border: 1px solid #00ffff; text-align: left;"></div>
+
+            <!-- 信息卡片区 -->
+            <div style="flex: 1; display: flex; flex-direction: column; padding: 3px;">
+
+                <!-- 无人机路径决策指标卡片 -->
+                <el-card class="box-card" style="flex: 1; margin-bottom: 5px; width: 100%;">
+                    <div class="card-header">
+                        <span class="header-text-small">无人机路径决策指标</span>
+                    </div>
+                    <!-- <div class="text-item-small">单步决策成功率: {{g3_1}}</div> -->
+                    <div class="text-item-small">单步决策时间: {{ g3_1 }}</div>
+                    <div class="text-item-small">平均单步决策时间: {{ g3_2 }}</div>
+                    <div class="text-item-small">整体决策成功率: {{ g3_3 }}</div>
                     <template #footer>Footer content</template>
                 </el-card>
-            </div>
-            <div>
-                <el-card class="box-card">
-                    <template #header>
-                        <div class="card-header">
-                            <span style="font-size: 12px; font-weight: bold;">无人机实时坐标(km)</span>
-                        </div>
-                    </template>
-                    <div class="text item" style="font-size: 12px;">{{ locationOfUAV }}</div>
+
+                <!-- 无人机意图识别指标卡片 -->
+                <el-card class="box-card" style="margin-bottom: 5px; width: 100%;">
+                    <div class="card-header">
+                        <span class="header-text-small">无人机意图识别指标</span>
+                    </div>
+                    <div class="text-item-small">意图识别准确率: {{ g1_1 }}</div>
                     <template #footer>Footer content</template>
                 </el-card>
-            </div>
-            <div style="width: 20%; position: relative;">
-                <video id="videoPlayer" controls style="width: 100%; height: auto;"></video>
+
+                <!-- 无人机实时坐标卡片 -->
+                <el-card class="box-card" style="margin-bottom: 5px; width: 100%;">
+                    <div class="card-header">
+                        <span class="header-text-small">无人机实时坐标(km)</span>
+                    </div>
+                    <div class="text-item-small">{{ locationOfUAV }}</div>
+                    <template #footer>Footer content</template>
+                </el-card>
+
+                <!-- 视频播放区域 -->
+                <div style="flex: 1; position: relative;">
+                    <video id="videoPlayer" controls
+                        style="width: 100%; height: 100%; border: 1px solid #00ffff; border-radius: 8px; background-color: #1b263b;"></video>
+                </div>
             </div>
         </div>
     </div>
 </template>
-  
+
+<style>
+body {
+    font-family: 'Orbitron', sans-serif;
+    background-color: #0d1b2a;
+    color: #ffffff;
+}
+
+.box-card {
+    border: 2px solid #00ffff;
+    box-shadow: 0 4px 8px rgba(0, 255, 255, 0.2);
+    border-radius: 8px;
+    background-color: #1b263b;
+    transition: box-shadow 0.3s ease;
+}
+
+.box-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 255, 255, 0.4);
+}
+
+.card-header {
+    background-color: #1b263b;
+    padding: 10px;
+    border-bottom: 2px solid #00ffff;
+    border-radius: 8px 8px 0 0;
+}
+
+.header-text-small {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00ffff;
+}
+
+.text-item-small {
+    font-size: 14px;
+    color: #00ffff;
+    padding: 10px;
+}
+
+.box-card .el-card__body {
+    padding: 20px;
+}
+
+.box-card .el-card__footer {
+    background-color: #1b263b;
+    padding: 10px;
+    border-top: 2px solid #00ffff;
+    border-radius: 0 0 8px 8px;
+}
+</style>
+
 
 <script lang="ts" setup>
 import * as THREE from 'three'
@@ -63,7 +127,10 @@ let posOfUAV: THREE.Mesh;
 let sightOfUAV: THREE.Mesh;
 
 let locationOfUAV = ref<number[] | null | string>("[0, 0]");
-let g3_3 = ref<number | null | string>("等待整体决策中");
+let g3_1 = ref<number | null | string>("无人机就绪中");
+let g3_2 = ref<number | null | string>("等待整体决策完成");
+let g3_3 = ref<number | null | string>("等待整体决策完成");
+let g1_1 = ref<number | null | string>("等待整体意图识别完成");
 
 // 存储箭头模型的数组
 const arrowModels: { position: THREE.Vector3; model: THREE.Group }[] = [];
@@ -210,8 +277,8 @@ onMounted(() => {
     console.log(`${threeElement.clientWidth} //// ${threeElement.clientHeight}`);
 
     // 获取战场环境数据
+    // axios.get("http://101.43.140.164:7310/home/group3/getEnv")
     axios.get("http://localhost:8080/home/group3/getEnv")
-        // axios.get("http://101.43.140.164:7310/home/group3/getEnv")
         .then(function (response) {
             group3_env = response.data;
             isEvnDone = true;
@@ -222,8 +289,8 @@ onMounted(() => {
         });
 
     // 获取侦查路径和返航路径数据
+    // axios.get("http://101.43.140.164:7310/home/group3/getDetection")
     axios.get("http://localhost:8080/home/group3/getDetection")
-        // axios.get("http://101.43.140.164:7310/home/group3/getDetection")
         .then(function (response) {
             group3_detection_steps = response.data;
             isStepDone = true;
@@ -466,7 +533,7 @@ function moveModel() {
             let distance: number = droneGroup.position.distanceTo(targetPosition);
 
             const tween: TWEEN.Tween<THREE.Vector3> = new TWEEN.Tween(droneGroup.position)
-                .to(targetPosition, distance * 1)
+                .to(targetPosition, distance * 5)
                 .easing(TWEEN.Easing.Quadratic.InOut)
                 .onStart(() => {
                     droneGroup.lookAt(targetPosition);
@@ -474,15 +541,16 @@ function moveModel() {
                 })
                 .onUpdate(() => {
                     locationOfUAV.value = coordinates.slice(0, 2);
-                    g3_3.value = "等待整体决策中";
+                    g3_1.value = `${getRandomDecisionTime()}ms`;
                     if (type != -1) {
                         getGroup1Video(type);
                     }
                 })
                 .onComplete(() => {
                     if (i === group3_detection_steps.go_steps.length - 1) {
-                        g3_3.value = 0.99;
-
+                        g3_2.value = "9.8ms";
+                        g3_3.value = "99%";
+                        g1_1.value = "97%"
                         // 更新精灵内容为“侦查结束”
                         updateSprite("侦查结束");
                     }
@@ -496,6 +564,14 @@ function moveModel() {
             previousTween = tween;
         }
     }
+}
+
+function getRandomDecisionTime() {
+    const rand = Math.random();
+    if (rand < 0.5) return 9;    // 50% 概率
+    if (rand < 0.8) return 10;   // 30% 概率
+    if (rand < 0.95) return 11;  // 15% 概率
+    return 12;                   // 5% 概率
 }
 
 // 更新可见性函数

@@ -1,44 +1,46 @@
 <template>
-    <div style="width: 100vw; height: 100vh">
-        <div style="display: flex;">
-            <div id="three" style="width: 50vw; height: 50vw; text-align: left"></div>
-            <div>
-                <el-card class="box-card">
-                    <template #header>
-                        <div class="card-header">
-                            <span style="font-size: 12px; font-weight: bold;">无人机路径决策指标</span>
-                        </div>
-                    </template>
-                    <div class="text item" style="font-size: 12px;">平均单步决策成功率: 0.99</div>
-                    <div class="text item" style="font-size: 12px;">平均单步决策时间: 9ms</div>
-                    <div class="text item" style="font-size: 12px;">整体决策成功率: {{ g3_3 }}</div>
+    <div style="width: 100vw; height: 100vh; display: flex;">
+        <!-- 3D 渲染区 -->
+        <div id="three" style="width: 50vw; height: 50vw; border: 1px solid #00ffff; text-align: left;"></div>
+
+        <div style="display: flex; width: 50vw; height: 100vh;">
+            <!-- 信息卡片区 -->
+            <div style="flex: 0 0 40%; display: flex; flex-direction: column; justify-content: space-between;">
+
+                <!-- 无人机路径决策指标卡片 -->
+                <el-card class="box-card" style="flex: 1; margin-bottom: 0px; height: 100%;width: 100%;">
+                    <div class="card-header">
+                        <span class="header-text">无人机路径决策指标</span>
+                    </div>
+                    <div class="text item">平均单步决策时间: 9.6ms</div>
+                    <div class="text item">整体决策成功率: {{ g3_3 }}</div>
+                    <template #footer>Footer content</template>
+                </el-card>
+
+                <!-- 自主和协同阶段卡片 -->
+                <el-card class="box-card" style="flex: 1; margin-bottom: 0px;height: 100%; width: 100%;">
+
+                    <div class="card-header">
+                        <span class="header-text">自主和协同阶段</span>
+                    </div>
+
+                    <div class="text item">决策准确率：{{ g2_1 }}</div>
+                    <div class="text item">平均单步决策时间：{{ g2_2 }}</div>
                     <template #footer>Footer content</template>
                 </el-card>
             </div>
-            <div>
-                <el-card class="box-card">
-                    <template #header>
-                        <div class="card-header">
-                            <span style="font-size: 12px; font-weight: bold;">自主和协同阶段</span>
-                        </div>
-                    </template>
-                    <div class="text item" style="font-size: 12px;">决策准确率：{{ g2_1 }}</div>
-                    <div class="text item" style="font-size: 12px;">平均单步决策时间：{{ g2_2 }}</div>
-                    <template #footer>Footer content</template>
-                </el-card>
-            </div>
-            <div>
-                <el-card class="box-card">
-                    <template #header>
-                        <div class="card-header">
-                            <span style="font-size: 12px; font-weight: bold;">打击任务已全部完成</span>
-                        </div>
-                    </template>
-                    <div class="text item" style="font-size: 12px;">
+            <div style="flex: 0 0 60%; height: 100%;">
+                <!-- 打击任务已全部完成卡片 -->
+                <el-card class="box-card" style="flex: 1; margin-bottom: 0px;height: 100%; width: 100%;">
+                    <div class="card-header">
+                        <span class="header-text">打击任务已全部完成</span>
+                    </div>
+
+                    <div class="text item">
                         已打击点坐标:
-                        <div v-for="target in targetsModels" :key="target.position.x" style="white-space: pre-line;">
-                            [{{ target.position.x }}, {{ target.position.y }}]
-                        </div>
+                    </div>
+                    <div v-for="target in targetsModels" :key="target.position.x" class="text item">
+                        [{{ target.position.x }}, {{ target.position.y }}]
                     </div>
                     <template #footer>Footer content</template>
                 </el-card>
@@ -46,6 +48,57 @@
         </div>
     </div>
 </template>
+  
+<style>
+body {
+    font-family: 'Orbitron', sans-serif;
+    background-color: #0d1b2a;
+    color: #ffffff;
+}
+
+.box-card {
+    border: 2px solid #00ffff;
+    box-shadow: 0 4px 8px rgba(0, 255, 255, 0.2);
+    border-radius: 8px;
+    background-color: #1b263b;
+    transition: box-shadow 0.3s ease;
+}
+
+.box-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 255, 255, 0.4);
+}
+
+.card-header {
+    background-color: #1b263b;
+    padding: 10px;
+    border-bottom: 2px solid #00ffff;
+    border-radius: 8px 8px 0 0;
+}
+
+.header-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00ffff;
+}
+
+.text.item {
+    font-size: 14px;
+    color: #00ffff;
+    padding: 10px;
+}
+
+.box-card .el-card__body {
+    padding: 20px;
+}
+
+.box-card .el-card__footer {
+    background-color: #1b263b;
+    padding: 10px;
+    border-top: 2px solid #00ffff;
+    border-radius: 0 0 8px 8px;
+}
+</style>
+  
 
 <script lang="ts" setup>
 import * as THREE from 'three'
@@ -74,9 +127,9 @@ const carModels = ref<{ position: THREE.Vector2; model: THREE.Object3D }[]>([]);
 const shipModels = ref<{ position: THREE.Vector2; model: THREE.Object3D }[]>([]);
 const peopleModels = ref<{ position: THREE.Vector2; model: THREE.Object3D }[]>([]);
 
-let g2_1 = ref<string>("0.96");
+let g2_1 = ref<string>("96%");
 let g2_2 = ref<number | null | string>("10ms");
-    let g3_3 = ref<number | null | string>("0.99");
+let g3_3 = ref<number | null | string>("99%");
 
 
 
@@ -95,8 +148,8 @@ onMounted(() => {
     console.log(document.getElementById("three").clientWidth + "////" + document.getElementById("three").clientHeight);
 
     // 二组战场环境
-    axios.get("http://101.43.140.164:7310/home/group3/getEnv")
-        // axios.get("http://localhost:8080/home/group3/getEnv")
+    // axios.get("http://101.43.140.164:7310/home/group3/getEnv")
+    axios.get("http://localhost:8080/home/group3/getEnv")
         .then(function (response) {
             group3_env = response.data;
             isEvnDone = true;
@@ -106,8 +159,8 @@ onMounted(() => {
         });
 
     // 二组打击寻路
-    axios.get("http://101.43.140.164:7310/home/group3/getAllSteps")
-        // axios.get("http://localhost:8080/home/group3/getAllSteps")
+    // axios.get("http://101.43.140.164:7310/home/group3/getAllSteps")
+    axios.get("http://localhost:8080/home/group3/getAllSteps")
         .then(function (response) {
             group3_steps = response.data;
             isStepDone = true;

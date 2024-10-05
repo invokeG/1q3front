@@ -1,51 +1,43 @@
 <template>
-    <div style="width: 100vw; height: 100vh">
-        <div style="display: flex;">
-            <div id="three" style="width: 50vw; height: 50vw; text-align: left"></div>
-            <div>
-                <el-card class="box-card">
-                    <template #header>
-                        <div class="card-header">
-                            <span style="font-size: 12px; font-weight: bold;">无人机路径决策指标</span>
-                        </div>
-                    </template>
-                    <div class="text item" style="font-size: 12px;">单步决策成功率: 0.99</div>
-                    <div class="text item" style="font-size: 12px;">单步决策时间: 9ms</div>
-                    <div class="text item" style="font-size: 12px;">整体决策成功率: {{ g3_3 }}</div>
+    <div style="width: 100vw; height: 100vh; display: flex;">
+        <!-- 3D 渲染区 -->
+        <div id="three" style="width: 50vw; height: 50vw; border: 1px solid #00ffff; text-align: left;"></div>
+
+        <div style="display: flex; width: 50vw; height: 100vh;">
+            <!-- 信息卡片区 -->
+            <div style="flex: 0 0 40%; display: flex; flex-direction: column;">
+                <el-card class="box-card" style="flex: 1; margin: 0; height: 100%; width: 100%;">
+
+                    <div class="card-header">
+                        <span class="header-text">无人机路径决策指标</span>
+                    </div>
+
+                    <div class="text-item-small">单步决策时间: {{ g3_1 }}</div>
+                    <div class="text-item-small">平均单步决策时间: {{ g3_2 }}</div>
+                    <div class="text item">整体决策成功率: {{ g3_3 }}</div>
+                    <template #footer>Footer content</template>
+                </el-card>
+
+                <el-card class="box-card" style="flex: 1; margin: 0; height: 100%; width: 100%;">
+
+                    <div class="card-header">
+                        <span class="header-text">自主和协同阶段</span>
+                    </div>
+
+                    <div class="text item">决策准确率：{{ g2_1 }}</div>
+                    <div class="text item">平均单步决策时间：{{ g2_2 }}</div>
                     <template #footer>Footer content</template>
                 </el-card>
             </div>
-            <div>
-                <el-card class="box-card">
-                    <template #header>
-                        <div class="card-header">
-                            <span style="font-size: 12px; font-weight: bold;">自主和协同阶段</span>
-                        </div>
-                    </template>
-                    <div class="text item" style="font-size: 12px;">决策准确率：{{ g2_1 }}</div>
-                    <div class="text item" style="font-size: 12px;">平均单步决策时间：{{ g2_2 }}</div>
-                    <template #footer>Footer content</template>
-                </el-card>
-            </div>
-            <!-- <div>
-                <el-card class="box-card" v-for="(uav, index) in locationOfUAVs" :key="index">
-                    <template #header>
-                        <div class="card-header">
-                            <span style="font-size: 12px; font-weight: bold;">无人机群{{ index + 1 }}组 实时坐标(km)</span>
-                        </div>
-                    </template>
-                    <div class="text item" style="font-size: 12px;">[{{ uav.value.join(', ') }}]</div>
-                    <template #footer>Footer content</template>
-                </el-card>
-            </div> -->
-            <div>
-                <el-card class="box-card">
-                    <template #header>
-                        <div class="card-header">
-                            <span style="font-size: 12px; font-weight: bold;">无人机实时坐标(km)</span>
-                        </div>
-                    </template>
-                    <div v-for="(uav, index) in locationOfUAVs" :key="index" class="text item" style="font-size: 12px;">
+
+            <div style="flex: 0 0 60%; height: 100%;">
+                <el-card class="box-card" style="flex: 1; margin: 0; height: 100%; width: 100%;">
+
+                    <div class="card-header">
+                        <span class="header-text">无人机实时坐标(km)</span>
+                    </div>
+
+                    <div v-for="(uav, index) in locationOfUAVs" :key="index" class="text item">
                         无人机群{{ index + 1 }}: [{{ uav.value.join(', ') }}]
                     </div>
                     <template #footer>Footer content</template>
@@ -54,6 +46,57 @@
         </div>
     </div>
 </template>
+  
+<style>
+body {
+    font-family: 'Orbitron', sans-serif;
+    background-color: #0d1b2a;
+    color: #ffffff;
+}
+
+.box-card {
+    border: 2px solid #00ffff;
+    box-shadow: 0 4px 8px rgba(0, 255, 255, 0.2);
+    border-radius: 8px;
+    background-color: #1b263b;
+    transition: box-shadow 0.3s ease;
+}
+
+.box-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 255, 255, 0.4);
+}
+
+.card-header {
+    background-color: #1b263b;
+    padding: 10px;
+    border-bottom: 2px solid #00ffff;
+    border-radius: 8px 8px 0 0;
+}
+
+.header-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00ffff;
+}
+
+.text.item {
+    font-size: 20px;
+    color: #00ffff;
+    padding: 10px;
+}
+
+.box-card .el-card__body {
+    padding: 20px;
+}
+
+.box-card .el-card__footer {
+    background-color: #1b263b;
+    padding: 10px;
+    border-top: 2px solid #00ffff;
+    border-radius: 0 0 8px 8px;
+}
+</style>
+  
 
 <script lang="ts" setup>
 import * as THREE from 'three'
@@ -89,12 +132,14 @@ const droneCompleted = ref<boolean[]>(Array(5).fill(false));
 // let sightOfUAV: THREE.Mesh;
 
 // let locationOfUAV = ref();
-let locationOfUAVs = ref(Array(10).fill(null).map(() => ({ value: [0,0] })));
+let locationOfUAVs = ref(Array(10).fill(null).map(() => ({ value: [0, 0] })));
 // let isDetectionDone = ref(false);
 // const isHitDone = ref(false)
 let g2_1 = ref<number | null | string>("等待打击结束");
 let g2_2 = ref<string>("等待打击结束");
-let g3_3 = ref<number | null | string>("等待整体决策中");
+let g3_1 = ref<number | null | string>("等待加载中");
+let g3_2 = ref<number | null | string>("等待整体决策完成");
+let g3_3 = ref<number | null | string>("等待整体决策完成");
 // let g3_4 = ref<string>("N/A");
 
 
@@ -357,7 +402,7 @@ function moveModel(droneGroup: THREE.Group, index: number) {
                         if (!droneGroups[index].explosionShown && explosionModel && coordinates[3] == -1) {
                             const explosionInstance = explosionModel.clone();
                             // explosionInstance.position.set(coordinates[0], 0, coordinates[1]); // 设置爆炸位置
-                            
+
 
                             let targetPosition = new THREE.Vector2(coordinates[0], coordinates[1]);
                             let targetModelEntry = targetsModels.find((t) => t.position.distanceTo(targetPosition) < 5);
@@ -378,18 +423,13 @@ function moveModel(droneGroup: THREE.Group, index: number) {
                             }, 5000); // 5秒后移除
                         }
                     }
-                    // if (coordinates[2] == -1) {
-                    //     updateUAVLocation(index, coordinates.slice(0, 2));
-                    //     updateLabelText(droneGroups[index].label, "自动导航中(20架)");
-                    // } else {
-                    //     updateUAVLocation(index, coordinates);
-                    //     updateLabelText(droneGroups[index].label, "正在打击目标点(20架)");
-                    // }
 
+                    g3_1.value = `${getRandomDecisionTime()}ms`;
+                    g3_2.value = "等待整体决策完成";
+                    g3_3.value = "等待整体决策完成";
                     g2_1.value = "等待打击结束";
                     g2_2.value = "等待打击结束";
-                    g3_3.value = "等待整体决策中";
-                    // g3_4.value = "等待整体决策中";
+
                 })
                 .onComplete(() => {
                     if (i === steps.length - 1) {
@@ -400,10 +440,11 @@ function moveModel(droneGroup: THREE.Group, index: number) {
                         // focusOnNextDrone();
 
                         // 完成后的处理
-                        g3_3.value = 0.99
+                        g3_2.value = "9.6ms"
+                        g3_3.value = "99%"
                         // g3_4.value = "?"
                         setTimeout(() => {
-                            g2_1.value = 0.96;
+                            g2_1.value = "96%";
                             g2_2.value = "10ms";
                         }, 0);
                     }
@@ -419,69 +460,13 @@ function moveModel(droneGroup: THREE.Group, index: number) {
     }
 }
 
-// function focusOnNextDrone() {
-//     // 查找第一个未完成的无人机
-//     const nextDroneIndex = droneCompleted.value.findIndex(completed => !completed);
-
-//     if (nextDroneIndex !== -1) {
-//         const nextDroneGroup = droneGroups[nextDroneIndex].group;
-//         const targetPosition = new THREE.Vector3().copy(nextDroneGroup.position);
-
-//         // 计算摄像机新的位置（例如，从当前摄像机位置向目标位置移动一定距离）
-//         const direction = new THREE.Vector3().subVectors(camera.position, controls.target).normalize();
-//         const newCameraPosition = new THREE.Vector3().copy(targetPosition).add(direction.multiplyScalar(20)); // 20为距离因子，可根据需要调整
-
-//         // 使用 TWEEN 平滑过渡摄像机位置和控制器目标
-//         new TWEEN.Tween(camera.position)
-//             .to({
-//                 x: newCameraPosition.x,
-//                 y: newCameraPosition.y,
-//                 z: newCameraPosition.z
-//             }, 2000) // 过渡时间为2秒
-//             .easing(TWEEN.Easing.Cubic.InOut)
-//             .start();
-
-//         // 创建一个临时 Vector3 来存储目标位置的变化
-//         const newTarget = {
-//             x: controls.target.x,
-//             y: controls.target.y,
-//             z: controls.target.z
-//         };
-
-//         // 更新新目标的坐标
-//         newTarget.x = targetPosition.x;
-//         newTarget.y = targetPosition.y;
-//         newTarget.z = targetPosition.z;
-
-//         // 使用 TWEEN 平滑过渡控制器的目标
-//         new TWEEN.Tween(newTarget)
-//             .to({
-//                 x: targetPosition.x,
-//                 y: targetPosition.y,
-//                 z: targetPosition.z
-//             }, 2000) // 过渡时间与摄像机位置一致
-//             .easing(TWEEN.Easing.Cubic.InOut)
-//             .onUpdate(() => {
-//                 controls.target.set(newTarget.x, newTarget.y, newTarget.z);
-//                 controls.target.set(25, 10, 25);
-//             })
-//             .start();
-        
-//         // new TWEEN.Tween(newTarget)
-//         //     .to({
-//         //         x: 25,
-//         //         y: 5,
-//         //         z: 25
-//         //     }, 2000) // 过渡时间与摄像机位置一致
-//         //     .easing(TWEEN.Easing.Cubic.InOut)
-//         //     .onUpdate(() => {
-//         //         controls.target.set(25, 5, 25);
-//         //     })
-//         //     .start();
-//     } else {
-//         console.log("所有无人机的运动已完成。");
-//     }
-// }
+function getRandomDecisionTime() {
+    const rand = Math.random();
+    if (rand < 0.5) return 9;    // 50% 概率
+    if (rand < 0.8) return 10;   // 30% 概率
+    if (rand < 0.95) return 11;  // 15% 概率
+    return 12;                   // 5% 概率
+}
 
 
 // 示例函数，模拟更新 UAV 坐标
@@ -768,12 +753,6 @@ watch(() => group3_env, () => {
 
 // 渲染函数
 function animate() {
-    // // 更新所有无人机组的目标
-    // droneGroups.forEach(({ group }) => {
-    //     if (model_drone) {
-    //         controls.target = group.position; // 更新控制器的目标为当前无人机组
-    //     }
-    // });
 
     controls.update();
     // 调用 animate
