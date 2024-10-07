@@ -8,7 +8,7 @@
             <div style="flex: 1; display: flex; flex-direction: column; padding: 3px;">
 
                 <!-- 无人机路径决策指标卡片 -->
-                <el-card class="box-card" style="flex: 1; margin-bottom: 5px; width: 100%;">
+                <el-card class="box-card" style="margin-bottom: 5px; height: 25%; width: 100%;">
                     <div class="card-header">
                         <span class="header-text-small">无人机路径决策指标</span>
                     </div>
@@ -20,7 +20,7 @@
                 </el-card>
 
                 <!-- 无人机意图识别指标卡片 -->
-                <el-card class="box-card" style="margin-bottom: 5px; width: 100%;">
+                <el-card class="box-card" style="margin-bottom: 5px; height: 15%; width: 100%;">
                     <div class="card-header">
                         <span class="header-text-small">无人机意图识别指标</span>
                     </div>
@@ -29,7 +29,7 @@
                 </el-card>
 
                 <!-- 无人机实时坐标卡片 -->
-                <el-card class="box-card" style="margin-bottom: 5px; width: 100%;">
+                <el-card class="box-card" style="margin-bottom: 5px; height: 15%; width: 100%;">
                     <div class="card-header">
                         <span class="header-text-small">无人机实时坐标(km)</span>
                     </div>
@@ -541,14 +541,14 @@ function moveModel() {
                 })
                 .onUpdate(() => {
                     locationOfUAV.value = coordinates.slice(0, 2);
-                    g3_1.value = `${getRandomDecisionTime()}ms`;
+                    g3_1.value = `${getRandomDecisionTime()} ms`;
                     if (type != -1) {
                         getGroup1Video(type);
                     }
                 })
                 .onComplete(() => {
                     if (i === group3_detection_steps.go_steps.length - 1) {
-                        g3_2.value = "9.8ms";
+                        g3_2.value = "9.8 ms";
                         g3_3.value = "99%";
                         g1_1.value = "97%"
                         // 更新精灵内容为“侦查结束”

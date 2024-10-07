@@ -424,7 +424,7 @@ function moveModel(droneGroup: THREE.Group, index: number) {
                         }
                     }
 
-                    g3_1.value = `${getRandomDecisionTime()}ms`;
+                    g3_1.value = `${getRandomDecisionTime()} ms`;
                     g3_2.value = "等待整体决策完成";
                     g3_3.value = "等待整体决策完成";
                     g2_1.value = "等待打击结束";
@@ -440,12 +440,12 @@ function moveModel(droneGroup: THREE.Group, index: number) {
                         // focusOnNextDrone();
 
                         // 完成后的处理
-                        g3_2.value = "9.6ms"
+                        g3_2.value = "9.6 ms"
                         g3_3.value = "99%"
                         // g3_4.value = "?"
                         setTimeout(() => {
                             g2_1.value = "96%";
-                            g2_2.value = "10ms";
+                            g2_2.value = "10 ms";
                         }, 0);
                     }
                 });

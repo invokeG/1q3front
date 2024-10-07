@@ -8,17 +8,17 @@
       <!-- <div style="flex: 0 0 45%; display: flex; flex-direction: column;"> -->
       <div style="flex: 1; display: flex; flex-direction: column; padding: 0px;">
         <!-- 无人机路径决策指标 卡片 -->
-        <el-card class="box-card" style="margin: 0; height: 30%; width: 100%;">
+        <el-card class="box-card" style="margin: 0; height: 25%; width: 100%;">
           <div class="card-header">
             <span class="header-text">无人机路径决策指标</span>
           </div>
-          <div class="text-item">平均单步决策时间: 9.8ms</div>
+          <div class="text-item">平均单步决策时间: 9.8 ms</div>
           <div class="text-item">整体决策成功率: {{ g3_3 }}</div>
           <template #footer>Footer content</template>
         </el-card>
 
         <!-- 无人机意图识别指标 卡片 -->
-        <el-card class="box-card" style="margin: 0; height: 20%; width: 100%;">
+        <el-card class="box-card" style="margin: 0; height: 15%; width: 100%;">
           <div class="card-header">
             <span class="header-text">无人机意图识别指标</span>
           </div>
@@ -27,7 +27,7 @@
         </el-card>
 
         <!-- 打击点坐标 卡片 -->
-        <el-card class="box-card" style="margin: 0; height: 50%; width: 100%;">
+        <el-card class="box-card" style="margin: 0; height: 40%; width: 100%;">
           <div class="card-header">
             <span class="header-text">打击点坐标</span>
           </div>
@@ -38,7 +38,18 @@
           </div>
           <template #footer>Footer content</template>
         </el-card>
+
+        <!-- 功耗指标 卡片 -->
+        <el-card class="box-card" style="margin: 0; height: 20%; width: 100%;">
+          <div class="card-header">
+            <span class="header-text">无人机功耗指标</span>
+          </div>
+          <div class="text-item">平均功耗：50 W</div>
+          <template #footer>Footer content</template>
+        </el-card>
       </div>
+
+
 
       <!-- 敌军坐标 卡片 -->
       <div style="flex: 0 0 55%; height: 100%;">

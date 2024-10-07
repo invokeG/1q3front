@@ -1,76 +1,77 @@
 <template>
     <div style="width: 100vw; height: 100vh; position: relative;">
-      <div style="display: flex;">
-        <!-- 3D 渲染区 -->
-        <div id="three" style="width: 50vw; height: 50vw; text-align: left; border: 1px solid #00ffff;text-align: left;"></div>
-  
-        <!-- 信息卡片区 -->
-        <div style="flex: 1; display: flex; flex-direction: column;">
-          <el-card class="box-card"  style="flex: 1; margin: 0; height: 100%; width: 100%;">
-            <div class="card-header">
-                <span class="header-text-small">已分配的目标点</span>
+        <div style="display: flex;">
+            <!-- 3D 渲染区 -->
+            <div id="three"
+                style="width: 50vw; height: 50vw; text-align: left; border: 1px solid #00ffff;text-align: left;"></div>
+
+            <!-- 信息卡片区 -->
+            <div style="flex: 1; display: flex; flex-direction: column;">
+                <el-card class="box-card" style="flex: 1; margin: 0; height: 100%; width: 100%;">
+                    <div class="card-header">
+                        <span class="header-text-small">已分配的目标点</span>
+                    </div>
+                    <div v-if="assignedTargets.length > 0">
+                        <div v-for="(target, index) in assignedTargets" :key="index" class="text-item-small">
+                            目标点 {{ index + 1 }}: ({{ target[0] }}, {{ target[1] }})
+                        </div>
+                    </div>
+                    <div v-else class="text-item-small">没有目标点分配</div>
+                </el-card>
             </div>
-            <div v-if="assignedTargets.length > 0">
-              <div v-for="(target, index) in assignedTargets" :key="index" class="text-item-small">
-                目标点 {{ index + 1 }}: ({{ target[0] }}, {{ target[1] }})
-              </div>
-            </div>
-            <div v-else class="text-item-small">没有目标点分配</div>
-          </el-card>
         </div>
-      </div>
     </div>
-  </template>
+</template>
   
-  <style>
-  body {
+<style>
+body {
     font-family: 'Orbitron', sans-serif;
     background-color: #0d1b2a;
     color: #ffffff;
-  }
-  
-  .box-card {
+}
+
+.box-card {
     border: 2px solid #00ffff;
     box-shadow: 0 4px 8px rgba(0, 255, 255, 0.2);
     border-radius: 8px;
     background-color: #1b263b;
     transition: box-shadow 0.3s ease;
-  }
-  
-  .box-card:hover {
+}
+
+.box-card:hover {
     box-shadow: 0 8px 16px rgba(0, 255, 255, 0.4);
-  }
-  
-  .card-header {
+}
+
+.card-header {
     background-color: #1b263b;
     padding: 10px;
     border-bottom: 2px solid #00ffff;
     border-radius: 8px 8px 0 0;
-  }
-  
-  .header-text-small {
+}
+
+.header-text-small {
     font-size: 24px;
     font-weight: bold;
     color: #00ffff;
-  }
-  
-  .text-item-small {
+}
+
+.text-item-small {
     font-size: 14px;
     color: #00ffff;
     padding: 10px;
-  }
-  
-  .box-card .el-card__body {
+}
+
+.box-card .el-card__body {
     padding: 20px;
-  }
-  
-  .box-card .el-card__footer {
+}
+
+.box-card .el-card__footer {
     background-color: #1b263b;
     padding: 10px;
     border-top: 2px solid #00ffff;
     border-radius: 0 0 8px 8px;
-  }
-  </style>
+}
+</style>
   
 
 <script lang="ts" setup>
@@ -246,9 +247,19 @@ onMounted(() => {
     threeElement.appendChild(renderer.domElement);
     console.log(`${threeElement.clientWidth} //// ${threeElement.clientHeight}`);
 
+    // 拉板卡
+    axios.get("http://localhost:8080/home/startPython")
+        .then(function (response) {
+            console.log(response.data);
+            // 由于接口不返回内容，这里不需要处理响应数据
+        })
+        .catch(function (error) {
+            console.error("发送 startPython 请求时出错：", error);
+        });
+
     // 获取战场环境数据
     // axios.get("http://101.43.140.164:7310/home/group3/getEnv")
-        axios.get("http://localhost:8080/home/group3/getEnv")
+    axios.get("http://localhost:8080/home/group3/getEnv")
         .then(function (response) {
             group3_env = response.data;
             isEvnDone = true;
@@ -260,7 +271,7 @@ onMounted(() => {
 
     // 获取侦查路径和返航路径数据
     // axios.get("http://101.43.140.164:7310/home/group3/getDetection")
-        axios.get("http://localhost:8080/home/group3/getDetection")
+    axios.get("http://localhost:8080/home/group3/getDetection")
         .then(function (response) {
             group3_detection_steps = response.data;
             isStepDone = true;
