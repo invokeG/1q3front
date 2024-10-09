@@ -8,29 +8,29 @@
             <div style="flex: 0 0 40%; display: flex; flex-direction: column; justify-content: space-between;">
 
                 <!-- 无人机路径决策指标卡片 -->
-                <el-card class="box-card" style="margin-bottom: 0px; height: 25%;width: 100%;">
+                <el-card class="box-card" style="margin-bottom: 0px; height: 35%;width: 100%;">
                     <div class="card-header">
-                        <span class="header-text">无人机路径决策指标</span>
+                        <span class="header-text">无人机群自主决策</span>
                     </div>
-                    <div class="text item">平均单步决策时间: 9.6 ms</div>
-                    <div class="text item">整体决策成功率: {{ g3_3 }}</div>
+                    <!-- <div class="text item">平均决策时间: 9.6 ms</div> -->
+                    <div class="text item">决策准确率: {{ g3_3 }}</div>
                     <template #footer>Footer content</template>
                 </el-card>
 
                 <!-- 自主和协同阶段卡片 -->
-                <el-card class="box-card" style="margin-bottom: 0px;height: 25%; width: 100%;">
+                <el-card class="box-card" style="margin-bottom: 0px;height: 35%; width: 100%;">
 
                     <div class="card-header">
-                        <span class="header-text">自主和协同阶段</span>
+                        <span class="header-text">无人机群协同决策</span>
                     </div>
 
                     <div class="text item">决策准确率：{{ g2_1 }}</div>
-                    <div class="text item">平均单步决策时间：{{ g2_2 }}</div>
+                    <!-- <div class="text item">平均决策时间：{{ g2_2 }}</div> -->
                     <template #footer>Footer content</template>
                 </el-card>
 
                 <!-- 五倍加速卡片 -->
-                <el-card class="box-card" style="margin-bottom: 0px;height: 30%; width: 100%;">
+                <!-- <el-card class="box-card" style="margin-bottom: 0px;height: 30%; width: 100%;">
                     <div class="card-header">
                         <span class="header-text">轻量化加速指标</span>
                     </div>
@@ -38,14 +38,14 @@
                     <div class="text item">加速后耗时：17.47 s</div>
                     <div class="text item">加速比：5.44</div>
                     <template #footer>Footer content</template>
-                </el-card>
+                </el-card> -->
 
                 <!-- 功耗卡片 -->
-                <el-card class="box-card" style="margin-bottom: 0px;height: 20%; width: 100%;">
+                <el-card class="box-card" style="margin-bottom: 0px;height: 30%; width: 100%;">
                     <div class="card-header">
-                        <span class="header-text">无人机功耗指标</span>
+                        <span class="header-text">无人机平台功耗</span>
                     </div>
-                    <div class="text item">平均功耗：50 W</div>
+                    <div class="text item">功耗：100 W</div>
                     <template #footer>Footer content</template>
                 </el-card>
             </div>
@@ -148,7 +148,7 @@ const shipModels = ref<{ position: THREE.Vector2; model: THREE.Object3D }[]>([])
 const peopleModels = ref<{ position: THREE.Vector2; model: THREE.Object3D }[]>([]);
 
 let g2_1 = ref<string>("96%");
-let g2_2 = ref<number | null | string>("10 ms");
+// let g2_2 = ref<number | null | string>("10 ms");
 let g3_3 = ref<number | null | string>("99%");
 
 

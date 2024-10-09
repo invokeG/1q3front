@@ -4,9 +4,7 @@
       <el-scrollbar>
         <el-menu>
           <!-- 点击该菜单项时直接跳转到 HelloPage 界面 -->
-          <el-menu-item
-            index="1-hello"
-            @click="handleHelloPage"
+          <el-menu-item index="1-hello" @click="handleHelloPage"
             :class="['menu-item0', { 'active-item': activeMenuItem === '1-hello' }]">
             <el-icon class="menu-icon">
               <DataBoard />
@@ -14,9 +12,7 @@
             <span class="menu-title" style="font-weight: bold;">无人机群智能计算演示系统</span>
           </el-menu-item>
 
-          <el-menu-item
-            index="1-2"
-            @click="() => handleMenuItemClick('1-2')"
+          <el-menu-item index="1-2" @click="() => handleMenuItemClick('1-2')"
             :class="['menu-item', { 'active-item': activeMenuItem === '1-2' }]">
             <el-icon class="menu-icon">
               <MapLocation />
@@ -24,9 +20,7 @@
             无人机任务分配
           </el-menu-item>
 
-          <el-menu-item
-            index="1-0"
-            @click="() => handleMenuItemClick('1-0')"
+          <el-menu-item index="1-0" @click="() => handleMenuItemClick('1-0')"
             :class="['menu-item', { 'active-item': activeMenuItem === '1-0' }]">
             <el-icon class="menu-icon">
               <Search />
@@ -34,34 +28,36 @@
             无人机侦查阶段
           </el-menu-item>
 
-          <el-menu-item
-            index="1-3"
-            @click="() => handleMenuItemClick('1-3')"
+          <el-menu-item index="1-3" @click="() => handleMenuItemClick('1-3')"
             :class="['menu-item', { 'active-item': activeMenuItem === '1-3' }]">
             <el-icon class="menu-icon">
-              <Check />
+              <Flag />
             </el-icon>
             侦查结果
           </el-menu-item>
 
-          <el-menu-item
-            index="1-1"
-            @click="() => handleMenuItemClick('1-1')"
+          <el-menu-item index="1-1" @click="() => handleMenuItemClick('1-1')"
             :class="['menu-item', { 'active-item': activeMenuItem === '1-1' }]">
             <el-icon class="menu-icon">
-              <Position />
+              <Aim />
             </el-icon>
             无人机打击阶段
           </el-menu-item>
 
-          <el-menu-item
-            index="1-4"
-            @click="() => handleMenuItemClick('1-4')"
+          <el-menu-item index="1-4" @click="() => handleMenuItemClick('1-4')"
             :class="['menu-item', { 'active-item': activeMenuItem === '1-4' }]">
             <el-icon class="menu-icon">
               <Flag />
             </el-icon>
             打击结果
+          </el-menu-item>
+
+          <el-menu-item index="1-4" @click="() => handleMenuItemClick('1-5')"
+            :class="['menu-item', { 'active-item': activeMenuItem === '1-5' }]">
+            <el-icon class="menu-icon">
+              <Check />
+            </el-icon>
+            实验验证
           </el-menu-item>
         </el-menu>
       </el-scrollbar>
@@ -85,6 +81,7 @@ import detectionPage from "./DetectionPage.vue";
 import positionPage from "./PositionPage.vue";
 import resOfDetc from "./ResOfDetc.vue";
 import finalRes from "./FinalRes.vue";
+import exprement from "./ExprementPage.vue"
 import { ref, onMounted } from "vue";
 
 // 定义当前组件和标题
@@ -123,6 +120,10 @@ const handleMenuItemClick = (index: string) => {
       break;
     case "1-4":
       currentComponent.value = finalRes;
+      headerTitle.value = "打击结果展示";  // 更新标题
+      break;
+    case "1-5":
+      currentComponent.value = exprement;
       headerTitle.value = "打击结果展示";  // 更新标题
       break;
     default:
@@ -199,8 +200,10 @@ onMounted(() => {
 }
 
 .menu-item.active-item {
-  border: 2px solid #ff1493; /* 选中项的边框颜色 */
-  background-color: rgba(255, 20, 147, 0.2); /* 选中项的背景色 */
+  border: 2px solid #ff1493;
+  /* 选中项的边框颜色 */
+  background-color: rgba(255, 20, 147, 0.2);
+  /* 选中项的背景色 */
 }
 
 .main {

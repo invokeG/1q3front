@@ -10,24 +10,24 @@
         <!-- 无人机路径决策指标 卡片 -->
         <el-card class="box-card" style="margin: 0; height: 25%; width: 100%;">
           <div class="card-header">
-            <span class="header-text">无人机路径决策指标</span>
+            <span class="header-text">无人机群自主决策</span>
           </div>
-          <div class="text-item">平均单步决策时间: 9.8 ms</div>
-          <div class="text-item">整体决策成功率: {{ g3_3 }}</div>
+          <div class="text-item">模型平均决策时间: 9.8 ms</div>
+          <!-- <div class="text-item">整体决策成功率: {{ g3_3 }}</div> -->
           <template #footer>Footer content</template>
         </el-card>
 
         <!-- 无人机意图识别指标 卡片 -->
-        <el-card class="box-card" style="margin: 0; height: 15%; width: 100%;">
+        <el-card class="box-card" style="margin: 0; height: 25%; width: 100%;">
           <div class="card-header">
-            <span class="header-text">无人机意图识别指标</span>
+            <span class="header-text">敌方意图识别指标</span>
           </div>
           <div class="text-item">意图识别准确率: 97%</div>
           <template #footer>Footer content</template>
         </el-card>
 
         <!-- 打击点坐标 卡片 -->
-        <el-card class="box-card" style="margin: 0; height: 40%; width: 100%;">
+        <el-card class="box-card" style="margin: 0; height: 50%; width: 100%;">
           <div class="card-header">
             <span class="header-text">打击点坐标</span>
           </div>
@@ -40,13 +40,13 @@
         </el-card>
 
         <!-- 功耗指标 卡片 -->
-        <el-card class="box-card" style="margin: 0; height: 20%; width: 100%;">
+        <!-- <el-card class="box-card" style="margin: 0; height: 20%; width: 100%;">
           <div class="card-header">
             <span class="header-text">无人机功耗指标</span>
           </div>
           <div class="text-item">平均功耗：50 W</div>
           <template #footer>Footer content</template>
-        </el-card>
+        </el-card> -->
       </div>
 
 
@@ -167,7 +167,7 @@ const carModels = ref<{ position: THREE.Vector2; model: THREE.Object3D }[]>([]);
 const shipModels = ref<{ position: THREE.Vector2; model: THREE.Object3D }[]>([]);
 const peopleModels = ref<{ position: THREE.Vector2; model: THREE.Object3D }[]>([]);
 
-let g3_3 = ref<number | null | string>("99%");
+// let g3_3 = ref<number | null | string>("99%");
 
 
 

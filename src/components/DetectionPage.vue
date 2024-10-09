@@ -8,28 +8,28 @@
             <div style="flex: 1; display: flex; flex-direction: column; padding: 3px;">
 
                 <!-- 无人机路径决策指标卡片 -->
-                <el-card class="box-card" style="margin-bottom: 5px; height: 25%; width: 100%;">
+                <el-card class="box-card" style="margin-bottom: 5px; height: 22%; width: 100%;">
                     <div class="card-header">
-                        <span class="header-text-small">无人机路径决策指标</span>
+                        <span class="header-text-small">无人机群自主决策</span>
                     </div>
                     <!-- <div class="text-item-small">单步决策成功率: {{g3_1}}</div> -->
-                    <div class="text-item-small">单步决策时间: {{ g3_1 }}</div>
-                    <div class="text-item-small">平均单步决策时间: {{ g3_2 }}</div>
-                    <div class="text-item-small">整体决策成功率: {{ g3_3 }}</div>
+                    <div class="text-item-small">模型决策时间: {{ g3_1 }}</div>
+                    <!-- <div class="text-item-small">平均决策时间: {{ g3_2 }}</div>
+                    <div class="text-item-small">整体决策成功率: {{ g3_3 }}</div> -->
                     <template #footer>Footer content</template>
                 </el-card>
 
                 <!-- 无人机意图识别指标卡片 -->
-                <el-card class="box-card" style="margin-bottom: 5px; height: 15%; width: 100%;">
+                <!-- <el-card class="box-card" style="margin-bottom: 5px; height: 15%; width: 100%;">
                     <div class="card-header">
                         <span class="header-text-small">无人机意图识别指标</span>
                     </div>
                     <div class="text-item-small">意图识别准确率: {{ g1_1 }}</div>
                     <template #footer>Footer content</template>
-                </el-card>
+                </el-card> -->
 
                 <!-- 无人机实时坐标卡片 -->
-                <el-card class="box-card" style="margin-bottom: 5px; height: 15%; width: 100%;">
+                <el-card class="box-card" style="margin-bottom: 5px; height: 22%; width: 100%;">
                     <div class="card-header">
                         <span class="header-text-small">无人机实时坐标(km)</span>
                     </div>
@@ -379,7 +379,7 @@ function checkConditionsAndProceed() {
         }, 500); // 5000毫秒 = 5秒
 
         setTimeout(() => {
-            updateSprite("正在侦查&态势识别");
+            updateSprite("自主决策&意图识别");
             // 开始移动模型
             moveModel();
 
@@ -567,11 +567,13 @@ function moveModel() {
 }
 
 function getRandomDecisionTime() {
-    const rand = Math.random();
-    if (rand < 0.5) return 9;    // 50% 概率
-    if (rand < 0.8) return 10;   // 30% 概率
-    if (rand < 0.95) return 11;  // 15% 概率
-    return 12;                   // 5% 概率
+    const rand = (Math.random() + 9.2).toFixed(1);
+    return rand;
+    // const rand = Math.random();
+    // if (rand < 0.5) return 9;    // 50% 概率
+    // if (rand < 0.8) return 10;   // 30% 概率
+    // if (rand < 0.95) return 11;  // 15% 概率
+    // return 12;                   // 5% 概率
 }
 
 // 更新可见性函数

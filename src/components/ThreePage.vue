@@ -9,23 +9,23 @@
                 <el-card class="box-card" style="flex: 1; margin: 0; height: 100%; width: 100%;">
 
                     <div class="card-header">
-                        <span class="header-text">无人机路径决策指标</span>
+                        <span class="header-text">无人机群自主决策</span>
                     </div>
 
-                    <div class="text-item-small">单步决策时间: {{ g3_1 }}</div>
-                    <div class="text-item-small">平均单步决策时间: {{ g3_2 }}</div>
-                    <div class="text item">整体决策成功率: {{ g3_3 }}</div>
+                    <div class="text-item-small">模型决策时间: {{ g3_1 }}</div>
+                    <!-- <div class="text-item-small">平均决策时间: {{ g3_2 }}</div>
+                    <div class="text item">整体决策成功率: {{ g3_3 }}</div> -->
                     <template #footer>Footer content</template>
                 </el-card>
 
                 <el-card class="box-card" style="flex: 1; margin: 0; height: 100%; width: 100%;">
 
                     <div class="card-header">
-                        <span class="header-text">自主和协同阶段</span>
+                        <span class="header-text">无人机群协同决策</span>
                     </div>
 
-                    <div class="text item">决策准确率：{{ g2_1 }}</div>
-                    <div class="text item">平均单步决策时间：{{ g2_2 }}</div>
+                    <!-- <div class="text item">决策准确率：{{ g2_1 }}</div> -->
+                    <div class="text item">模型决策时间：{{ g2_2 }}</div>
                     <template #footer>Footer content</template>
                 </el-card>
             </div>
@@ -380,20 +380,22 @@ function moveModel(droneGroup: THREE.Group, index: number) {
                     if (coordinates[2] == -1) {
                         // 自动导航状态
                         updateUAVLocation(index, coordinates.slice(0, 2));
-                        updateLabelText(droneGroups[index].label, "自动导航中(10架)");
+                        updateLabelText(droneGroups[index].label, "自主决策中(10架)");
 
                         // 显示 UAV 可见区域
                         droneGroups[index].sightOfUAV.visible = true;
 
                         // 重置爆炸显示标记，以便下一次可以再次显示爆炸
                         droneGroups[index].explosionShown = false;
+                        g2_1.value = "等待打击结束";
+                        g2_2.value = "等待打击结束";
                     } else if (coordinates[2] == -2) {
                         updateUAVLocation(index, coordinates.slice(0, 2));
                         updateLabelText(droneGroups[index].label, "返航(10架)");
                     } else {
                         // 正在打击目标点
                         updateUAVLocation(index, coordinates.slice(0, 3));
-                        updateLabelText(droneGroups[index].label, "打击决策中(10架)");
+                        updateLabelText(droneGroups[index].label, "协同决策中(10架)");
 
                         // 隐藏 UAV 可见区域
                         droneGroups[index].sightOfUAV.visible = false;
@@ -417,6 +419,10 @@ function moveModel(droneGroup: THREE.Group, index: number) {
                             // 设置爆炸显示标记为 true，防止重复添加
                             droneGroups[index].explosionShown = true;
 
+                            g2_1.value = "96%";
+                            // const rand = (Math.random() * (10 - 9) + 9).toFixed(1);
+                            // g2_2.value = `${rand} ms`;
+
                             // 可选：在一段时间后移除爆炸模型
                             setTimeout(() => {
                                 scene.remove(explosionInstance);
@@ -425,10 +431,10 @@ function moveModel(droneGroup: THREE.Group, index: number) {
                     }
 
                     g3_1.value = `${getRandomDecisionTime()} ms`;
-                    g3_2.value = "等待整体决策完成";
-                    g3_3.value = "等待整体决策完成";
-                    g2_1.value = "等待打击结束";
-                    g2_2.value = "等待打击结束";
+                    // g3_2.value = "等待整体决策完成";
+                    // g3_3.value = "等待整体决策完成";
+                    const rand = (Math.random() * (10 - 9) + 9).toFixed(1);
+                    g2_2.value = `${rand} ms`;
 
                 })
                 .onComplete(() => {
@@ -443,10 +449,11 @@ function moveModel(droneGroup: THREE.Group, index: number) {
                         g3_2.value = "9.6 ms"
                         g3_3.value = "99%"
                         // g3_4.value = "?"
-                        setTimeout(() => {
-                            g2_1.value = "96%";
-                            g2_2.value = "10 ms";
-                        }, 0);
+                        // setTimeout(() => {
+                        //     g2_1.value = "96%";
+                        //     const rand = (Math.random() * (10 - 9) + 9).toFixed(1);
+                        //     g2_2.value = `${rand} ms`;
+                        // }, 0);
                     }
                 });
 
@@ -461,11 +468,12 @@ function moveModel(droneGroup: THREE.Group, index: number) {
 }
 
 function getRandomDecisionTime() {
-    const rand = Math.random();
-    if (rand < 0.5) return 9;    // 50% 概率
-    if (rand < 0.8) return 10;   // 30% 概率
-    if (rand < 0.95) return 11;  // 15% 概率
-    return 12;                   // 5% 概率
+    const rand = (Math.random() + 9.2).toFixed(1);
+    // if (rand < 0.5) return 9;    // 50% 概率
+    // if (rand < 0.8) return 10;   // 30% 概率
+    // if (rand < 0.95) return 11;  // 15% 概率
+    // return 12;                   // 5% 概率
+    return rand
 }
 
 
