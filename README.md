@@ -1,6 +1,6 @@
 # 1Q3Front
 
-## Vite + Vue3 + TS + Tress.js
+## Vite + Vue3 + TS + Three.js
 
 <p align="center">
   <img alt="Static Badge" src="https://img.shields.io/badge/Vue-3.3.4-green">
@@ -17,6 +17,10 @@
 ## Start
 
 ```npm run dev```
+
+## Ref
+Three.js: https://threejs.org/docs/index.html#manual/zh/introduction/Creating-a-scene
+ElementUI: https://element-plus.org/zh-CN/component/layout.html
 
 
 

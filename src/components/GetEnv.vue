@@ -21,7 +21,7 @@ let isRequestDone = false
 
 onMounted(async () => {
   // await axios.get("http://192.168.31.216:8081/home/group3/getEnv")
-  await axios.get("http://localhost:8080/home/group3/getAllSteps")
+  await axios.get("http://101.43.140.164:7310/home/group3/getAllSteps")
     .then(function (response) {
       group3_env.value = response.data
     isRequestDone = true

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="$router.push('/display')">display</button>
+    <!-- <button @click="$router.push('/display')">display</button> -->
     <RouterView></RouterView>
   </div>
 </template>
